@@ -5,7 +5,6 @@
 #include "../headers/poly.h"
 #include <armadillo>
 
-
 /**
  * Generates a matrix containing per row the iterations of the Hermite polynomial
  * and per column the points to be evaluated for each polynomial.
@@ -15,7 +14,7 @@
  * @return A matrix of size (n, z.n_elem)
  */
 void
-Poly::calcHermite(int n, const arma::vec z)
+Poly::calcHermite(int n, const arma::vec &z)
 {
     arma::mat res(n, z.n_elem);
     arma::mat zt = z.t();
@@ -35,4 +34,10 @@ Poly::calcHermite(int n, const arma::vec z)
             res.row(i) = 2.0 * zt % res.row(i - 1) - 2.0 * (i - 1) * res.row(i - 2);
     }
     hermiteRes = res;
+}
+
+arma::vec
+Poly::hermite(int n)
+{
+    return hermiteRes.row(n).t();
 }
