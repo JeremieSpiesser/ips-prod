@@ -4,13 +4,13 @@ LDFLAGS = -larmadillo
 
 TARGET = ./bin/main
 MAIN_CPP = ./src/main.cpp
-OBJS = ./obj/poly.o ./obj/phi.o ./obj/phiplotter.o
+OBJS = ./obj/poly.o
 
 TEST_TARGET = ./bin/tests
-TEST_INC = ./tests/testTest.h ./tests/testPolgen.h ./tests/testPhi.h
+TEST_INC = ./tests/testTest.h ./tests/testPoly.h
 TEST_CXX_CPP = ./tests/tests.cpp
 
-ASTYLE_OPTIONS = ' \
+ASTYLE_OPTIONS = \
 		 --style=linux -s4 \
 		 --pad-oper --pad-header --pad-comma \
 		 --align-pointer=name --align-reference=name \
@@ -25,7 +25,7 @@ ASTYLE_OPTIONS = ' \
 		 --attach-inlines \
 		 --indent-labels \
 		 --indent-col1-comments \
-		 --indent-preproc-block'
+		 --indent-preproc-block
 
 .PHONY: all tests pres clean doc
 
@@ -44,7 +44,7 @@ $(TARGET): $(OBJS) $(MAIN_CPP)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 tests: $(OBJS)
-	cxxtestgen --error-printer -o $(TEST_CXX_CPP) $(TEST)
+	cxxtestgen --error-printer -o $(TEST_CXX_CPP) $(TEST_INC)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_CXX_CPP) $^ -o $(TEST_TARGET)
 
 pres:
