@@ -1,11 +1,11 @@
 #include <cxxtest/TestSuite.h>
-#include "../headers/polgen.h"
+#include "../headers/poly.h"
 
-class PolgenTest : public CxxTest::TestSuite
+class PolyTest : public CxxTest::TestSuite
 {
 public:
     void
-        mandatoryTest00(void){
+        test(void){
             Poly poly;
             arma::vec zVals, calcVals, targetVals;
             zVals = {-3.1, -2.3, -1.0, -0.3, 0.1, 4.3, 9.2, 13.7};

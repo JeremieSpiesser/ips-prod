@@ -2,7 +2,7 @@
 #define PHIPLOTTER_H
 #include <iostream>
 #include <armadillo>
-#include "./polgen.h"
+#include "./poly.h"
 #include "./phi.h"
 
 

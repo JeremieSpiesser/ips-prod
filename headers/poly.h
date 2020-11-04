@@ -19,6 +19,8 @@ public:
     // Laguerre related functions
     void calcLaguerre(int,int,arma::vec);
     arma::vec laguerre(int,int);
+private:
+    arma::mat hermiteRes;
 };
 
 #endif //SCHRODINGER_IPS_POLGEN_H

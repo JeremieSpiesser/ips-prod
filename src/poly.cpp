@@ -2,7 +2,7 @@
  *  @file polgen.cpp
  */
 
-#include "../headers/polgen.h"
+#include "../headers/poly.h"
 #include <armadillo>
 
 
@@ -14,14 +14,14 @@
  * @param n The final iteration of the Hermite polynomial requested
  * @return A matrix of size (n, z.n_elem)
  */
-arma::mat
-Polgen::getPolFromZVec(const arma::vec &z, unsigned int n)
+void
+Poly::calcHermite(int n, const arma::vec z)
 {
     arma::mat res(n, z.n_elem);
     arma::mat zt = z.t();
 
     // For each Hn
-    for (unsigned int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         // Case H0=1 handling
         if (0 == i) {
             res.row(i).fill(1);
@@ -34,6 +34,5 @@ Polgen::getPolFromZVec(const arma::vec &z, unsigned int n)
         else
             res.row(i) = 2.0 * zt % res.row(i - 1) - 2.0 * (i - 1) * res.row(i - 2);
     }
-
-    return res;
+    hermiteRes = res;
 }

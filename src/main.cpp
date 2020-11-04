@@ -2,7 +2,7 @@
 #include <armadillo>
 #include <utility>
 #include "../headers/phi.h"
-#include "../headers/polgen.h"
+#include "../headers/poly.h"
 #include "../headers/schrodingerVerificator.h"
 #include "../headers/phiplotter.h"
 
@@ -16,7 +16,8 @@ energyLevels()
     int min = -8, max = 8, n_vals = 100000, n_iter = 9;
     Phi p(min, max, n_vals, n_iter);
     p.fill_Z();
-    p.setHermite(Polgen::getPolFromZVec(p.getZ(), n_iter));
+
+    p.setHermite(Poly::getPolFromZVec(p.getZ(), n_iter));
     p.calculateAll();
 
     for (int i = 0; i < n_iter; i++) {
@@ -45,7 +46,7 @@ waveFunctions(std::string phi, std::string z)
     int min = -8, max = 8, n_vals = 250, n_iter = 10;
     Phi p(min, max, n_vals, n_iter);
     p.fill_Z();
-    p.setHermite(Polgen::getPolFromZVec(p.getZ(), n_iter));
+    p.setHermite(Poly::getPolFromZVec(p.getZ(), n_iter));
     p.calculateAll();
     PhiPlotter resultsExport(p);
     resultsExport.exportResults(std::move(phi), std::move(z));

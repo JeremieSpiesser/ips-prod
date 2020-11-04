@@ -3,7 +3,7 @@
  */
 
 #include "../headers/schrodingerVerificator.h"
-#include "../headers/polgen.h"
+#include "../headers/poly.h"
 #include "../headers/phi.h"
 
 /**

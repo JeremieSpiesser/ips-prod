@@ -3,8 +3,8 @@ CFLAGS = -g -std=c++11 -Wall -Wextra
 LDFLAGS = -larmadillo
 TARGET = ./bin/main
 TEST_TARGET = ./bin/tests
-OBJS = ./obj/polgen.o ./obj/phi.o ./obj/phiplotter.o ./obj/schrodingerVerificator.o
-TEST = ./tests/testTest.h ./tests/testPolgen.h ./tests/testPhi.h ./tests/testSchrodingerVerificator.h
+OBJS = ./obj/poly.o ./obj/phi.o ./obj/phiplotter.o 
+TEST = ./tests/testTest.h ./tests/testPolgen.h ./tests/testPhi.h 
 
 .PHONY: all tests pres
 
