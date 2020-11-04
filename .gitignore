@@ -1,0 +1,9 @@
+.idea/
+bin/main
+bin/tests
+doc/
+tests/tests.cpp
+obj/*.o
+CMakeLists.txt
+cmake-build-debug/
+astyle
