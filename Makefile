@@ -3,6 +3,7 @@ CFLAGS = -g -std=c++11 -Wall -Wextra
 LDFLAGS = -larmadillo
 
 TARGET = ./bin/main
+MAIN_CPP = ./src/main.cpp
 OBJS = ./obj/poly.o ./obj/phi.o ./obj/phiplotter.o
 
 TEST_TARGET = ./bin/tests
@@ -36,7 +37,7 @@ style:
 	astyle $(ASTYLE_OPTIONS) --recursive 'tests/test*.h'  || exit 1
 	exit 0
 
-$(TARGET): $(OBJS) ./src/main.cpp
+$(TARGET): $(OBJS) $(MAIN_CPP)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 ./obj/%.o: ./src/%.cpp ./headers/%.h
