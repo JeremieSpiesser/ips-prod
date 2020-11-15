@@ -7,7 +7,7 @@
 
 class Utils {
 public:
-    static int fact(int);
+    static double fact(int);
 };
 
 #endif //IPS_PROD_UTILS_H

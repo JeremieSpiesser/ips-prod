@@ -4,9 +4,9 @@
 
 #include "../headers/utils.h"
 
-int
+double
 Utils::fact(int n) {
-    int res = 1;
+    double res = 1.0;
     for(int i = 1; i <= n; i++){
         res *= i;
     }

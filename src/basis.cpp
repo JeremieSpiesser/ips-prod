@@ -14,7 +14,7 @@ Basis::zPart(arma::vec& z, int n_z) {
     poly.calcHermite(n_z + 1, z / bz);
 
     // Small hack for 2^(n_z) : 1 << n_z is an offset of n_z bytes long so it's equal to 2^(n_z)
-    double factor = 1.0 / std::sqrt(bz * ((double)(1 << n_z)) * std::sqrt(M_PI) * Utils::fact(n_z));
+    double factor = 1.0 / std::sqrt(bz * (1 << n_z) * std::sqrt(M_PI) * Utils::fact(n_z));
     arma::vec expo = arma::exp(arma::square(z) / (-2 * bz * bz));
 
     return factor * expo % poly.hermite(n_z);
