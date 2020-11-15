@@ -4,7 +4,7 @@ LDFLAGS = -larmadillo
 
 TARGET = ./bin/main
 MAIN_CPP = ./src/main.cpp
-OBJS = ./obj/poly.o
+OBJS = ./obj/poly.o ./obj/utils.o ./obj/basisFunc.o
 
 TEST_TARGET = ./bin/tests
 TEST_INC = ./tests/testTest.h ./tests/testPoly.h

@@ -4,8 +4,7 @@
 class TestPoly : public CxxTest::TestSuite
 {
 public:
-    void
-    testPoly(void) {
+    void testPoly(void) {
         Poly poly;
         arma::vec zVals, calcVals, targetVals;
         zVals = {-3.1, -2.3, -1.0, -0.3, 0.1, 4.3, 9.2, 13.7};

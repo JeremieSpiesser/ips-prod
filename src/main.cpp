@@ -1,7 +1,7 @@
 #include <iostream>
 #include <armadillo>
-#include <utility>
 #include "../headers/poly.h"
+#include "../headers/basisFunc.h"
 
 int
 main()
@@ -11,5 +11,9 @@ main()
     arma::vec z({1, 2, 3, 4, 5, 6});
     pol.calcHermite(10, z);
     pol.hermite(2).print("A");
+    BasisFunc bFunc(5.0, 4.0);
+
+    bFunc.calcZ(z, 4).print("Z");
+
     return 0;
 }
