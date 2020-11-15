@@ -38,14 +38,14 @@ style:
 	exit 0
 
 $(TARGET): $(OBJS) $(MAIN_CPP)
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 ./obj/%.o: ./src/%.cpp ./headers/%.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 tests: $(OBJS)
 	cxxtestgen --error-printer -o $(TEST_CXX_CPP) $(TEST_INC)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(TEST_CXX_CPP) $^ -o $(TEST_TARGET)
+	$(CC) $(CFLAGS) $(TEST_CXX_CPP) $^ -o $(TEST_TARGET) $(LDFLAGS)
 
 pres:
 	php -S localhost:8000 -t pres/
