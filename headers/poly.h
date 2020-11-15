@@ -21,6 +21,7 @@ public:
     arma::vec laguerre(int, int);
 private:
     arma::mat hermiteRes;
+    arma::cube laguerreRes;
 };
 
 #endif //SCHRODINGER_IPS_POLGEN_H
