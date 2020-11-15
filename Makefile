@@ -4,10 +4,10 @@ LDFLAGS = -larmadillo
 
 TARGET = ./bin/main
 MAIN_CPP = ./src/main.cpp
-OBJS = ./obj/poly.o ./obj/utils.o ./obj/basisFunc.o
+OBJS = ./obj/poly.o ./obj/utils.o ./obj/basis.o
 
 TEST_TARGET = ./bin/tests
-TEST_INC = ./tests/testTest.h ./tests/testPoly.h
+TEST_INC = ./tests/testTest.h ./tests/testUtils.h ./tests/testPoly.h ./tests/testBasis.h
 TEST_CXX_CPP = ./tests/tests.cpp
 
 ASTYLE_OPTIONS = \
