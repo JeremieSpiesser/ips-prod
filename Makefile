@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -std=c++11 -Wall -Wextra
+CFLAGS = -g -std=c++11 -Wall -Wextra -O3 -march=native -flto
 LDFLAGS = -larmadillo
 
 TARGET = ./bin/main
