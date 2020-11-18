@@ -6,10 +6,27 @@
 #include "../headers/poly.h"
 #include "../headers/utils.h"
 
-Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q(Q){
+using namespace std;
 
-    //Partie calcul de mMax, nMax et n_zMax ici !
+Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q(Q) {
+    // mMax
+    mMax = 0;
+    while (calcn_zMax(mMax + 1) >= 1.0) {
+        mMax++;
+    }
 
+    // nMax
+    arma::vec m = arma::regspace(0, mMax - 1);
+    nMax = arma::floor(0.5 * ((arma::ones(mMax) * mMax) - m - 1) + 1);
+
+    // n_zMax
+    n_zMax = arma::zeros(mMax, nMax(0));
+    for (int i = 0; i < mMax; i++) {
+        for (int j = 0; j < nMax[i]; j++) {
+            n_zMax(i, j) = (int) calcn_zMax(i + 2*j + 1);
+        }
+    }
+    
     //Selon les formules, ce sont les maximums
     rhoIndex = arma::cube(mMax, nMax(0), n_zMax(0, 0));
     uint i = 0;
@@ -19,6 +36,10 @@ Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q
             {
                 rhoIndex(m, n, n_z) = i++;
             }
+}
+
+double Basis::calcn_zMax(int i) const {
+    return (N + 2) * pow(Q, 2.0/3.0) + 0.5 - (i * Q);
 }
 
 arma::mat

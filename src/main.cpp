@@ -14,11 +14,14 @@ main()
 
     Nuclear nuclear(r, z, 1.935801664793151, 2.829683956491218, 14, 1.3);
 
+    std::cout << std::endl << "       -=-=[ Testing basis truncation ]=-=-" << std::endl;
+    Basis b(1.935801664793151, 2.829683956491218, 14, 1.3);
 
     arma::wall_clock timer;
     timer.tic();
     arma::mat res = nuclear.naiveCalc();
     std::cout << timer.toc() << " secondes pour l'algorithme naif" << std::endl;
     res.print("Res");
+    
     return 0;
 }
