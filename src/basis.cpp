@@ -26,14 +26,29 @@ Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q
             n_zMax(i, j) = (int) calcn_zMax(i + 2*j + 1);
         }
     }
+    
+    //Selon les formules, ce sont les maximums
+    rhoIndex = arma::cube(mMax, nMax(0), n_zMax(0, 0));
+    uint i = 0;
+    for (int m = 0; m < mMax; m++)
+        for (int n = 0; n < nMax(m); n++)
+            for (int n_z = 0; n_z < n_zMax(m, n); n_z++)
+            {
+                rhoIndex(m, n, n_z) = i++;
+            }
 }
 
 double Basis::calcn_zMax(int i) const {
     return (N + 2) * pow(Q, 2.0/3.0) + 0.5 - (i * Q);
 }
 
+arma::mat
+Basis::basisFunc(int m, int n, int n_z, arma::vec& zVals, arma::vec& rVals) const {
+    return zPart(zVals, n_z) * rPart(rVals, m, n).t();
+}
+
 arma::vec
-Basis::zPart(arma::vec& z, int n_z) {
+Basis::zPart(arma::vec& z, int n_z) const {
     Poly poly;
     poly.calcHermite(n_z + 1, z / bz);
 
@@ -45,7 +60,7 @@ Basis::zPart(arma::vec& z, int n_z) {
 }
 
 arma::vec
-Basis::rPart(arma::vec& rr, int m, int n) {
+Basis::rPart(arma::vec& rr, int m, int n) const {
     Poly poly;
     poly.calcLaguerre(m+1, n+1, arma::square(rr) / (br * br));
 
