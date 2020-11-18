@@ -15,5 +15,8 @@ main()
 
     bFunc.zPart(z, 4).print("Z");
 
+    std::cout << std::endl << "       -=-=[ Testing basis truncation ]=-=-" << std::endl;
+    Basis b(1.935801664793151, 2.829683956491218, 14, 1.3);
+
     return 0;
 }
