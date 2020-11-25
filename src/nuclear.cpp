@@ -52,15 +52,16 @@ Nuclear::opti1Calc(){
             for (int n_z = 0; n_z < basis.n_zMax(m, n); n_z++)
             {
                 arma::vec zpart1 = basis.zPart(z,n_z) ;
-
+                arma::mat funcA = zpart1 * rpart1.t();
                 for (int np = 0; np < basis.nMax(m); np++)
                 {
+                    arma::vec rpart2 = basis.rPart(r,m,np);
                     for (int n_zp = 0; n_zp < basis.n_zMax(m, np); n_zp++)
                     {
+                        arma::vec zpart2 = basis.zPart(z,n_zp);
                         //arma::mat funcA = basis.basisFunc( m,  n,  n_z, zVals, rVals);
-                        arma::mat funcA = zpart1 * rpart1.t();
                         //arma::mat funcB = basis.basisFunc(m, np, n_zp, zVals, rVals);
-                        arma::mat funcB = basis.zPart(z,n_zp) * basis.rPart(r,m,np).t();
+                        arma::mat funcB = zpart2 * rpart2.t();
                         result += funcA % funcB * rho(m, n, n_z, m , np, n_zp); // mat += mat % mat * double
                     }
                 }
