@@ -44,7 +44,7 @@ double Basis::calcn_zMax(int i) const {
 
 arma::mat
 Basis::basisFunc(int m, int n, int n_z, arma::vec& zVals, arma::vec& rVals) const {
-    return zPart(zVals, n_z) * rPart(rVals, m, n).t();
+    return rPart(rVals, m, n) * zPart(zVals, n_z).t();
 }
 
 arma::vec
