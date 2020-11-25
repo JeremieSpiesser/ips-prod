@@ -74,6 +74,12 @@ Poly::calcLaguerre(int m, int n, arma::vec z)
     laguerreRes = L;
 }
 
+/**
+ * Return the nth mth laguerre polynomial 
+ *@attention can/should only be run after the Poly::calcLaguerre method (which precalcs all the values)
+ *@return vec with size "number of points"
+ */
+
 arma::vec
 Poly::laguerre(int m, int n)
 {
