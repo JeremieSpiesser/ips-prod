@@ -8,3 +8,7 @@ CMakeLists.txt
 cmake-build-debug/
 astyle
 *.orig
+povray.png
+visu/visu.df3
+visu/visu.csv
+visu/visu.raw
