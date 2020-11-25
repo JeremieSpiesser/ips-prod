@@ -16,26 +16,28 @@
 void
 Poly::calcHermite(int n, const arma::vec &z)
 {
-    arma::mat res(n, z.n_elem);
+    arma::mat res(n+1, z.n_elem);
     arma::mat zt = z.t();
 
-    // For each Hn
-    for (int i = 0; i < n; i++) {
-        // Case H0=1 handling
-        if (0 == i) {
-            res.row(i).fill(1);
-            continue;
-        }
-
-        // For each given z
-        if (1 == i)
-            res.row(i) = 2.0 * zt;
-        else
+    if (n >= 0){
+        res.row(0).fill(1);
+    }
+    if (n>=1){
+        res.row(1) = 2.0 * zt;
+    }
+    if (n>=2){
+        for(int i=2 ; i <= n ; i++ ){
             res.row(i) = 2.0 * zt % res.row(i - 1) - 2.0 * (i - 1) * res.row(i - 2);
+        }
     }
     hermiteRes = res;
 }
 
+/**
+ * Return the nth hermite polynomial 
+ *@attention can/should only be run after the Poly::calcHermite method (which precalcs all the values)
+ *@return vec with size "number of points"
+ */
 arma::vec
 Poly::hermite(int n)
 {
