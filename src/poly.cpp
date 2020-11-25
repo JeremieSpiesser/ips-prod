@@ -6,12 +6,11 @@
 #include <armadillo>
 
 /**
- * Generates a matrix containing per row the iterations of the Hermite polynomial
+ * Computes a matrix containing per row the iterations of the Hermite polynomial
  * and per column the points to be evaluated for each polynomial.
  *
  * @param z The vector of points to be evaluated
  * @param n The final iteration of the Hermite polynomial requested
- * @return A matrix of size (n, z.n_elem)
  */
 void
 Poly::calcHermite(int n, const arma::vec &z)
@@ -44,14 +43,20 @@ Poly::hermite(int n)
     return hermiteRes.row(n).t();
 }
 
+/**
+ * Computes a cube containing all the Laguerre polynomials for n in [0..n] and m in [0..m]
+ * per slice : m and points fixed
+ *
+ * @param z The vector of points to be evaluated
+ * @param n Max nth Laguerre polynomial 
+ * @param m Max mth Laguerre polynomial 
+ */
 void
 Poly::calcLaguerre(int m, int n, arma::vec z)
 {
     //gerenating M matrix
     arma::vec reg = arma::regspace(0,m);
-    //reg.print("Reg : ");
     arma::vec tmp1(z.n_elem,arma::fill::ones);
-    //tmp1.print("TMP1 : ");
     arma::mat M = reg*tmp1.t();
 
     // Generating Z matrice
