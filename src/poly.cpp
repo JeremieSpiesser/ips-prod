@@ -1,5 +1,5 @@
 /**
- *  @file polgen.cpp
+ *  @file poly.cpp
  */
 
 #include "../headers/poly.h"
@@ -9,8 +9,8 @@
  * Computes a matrix containing per row the iterations of the Hermite polynomial
  * and per column the points to be evaluated for each polynomial.
  *
- * @param z The vector of points to be evaluated
- * @param n The final iteration of the Hermite polynomial requested
+ * @param \f$z\f$ The vector of points to be evaluated
+ * @param \f$n\f$ The final iteration of the Hermite polynomial requested
  */
 void
 Poly::calcHermite(int n, const arma::vec &z)
@@ -33,9 +33,9 @@ Poly::calcHermite(int n, const arma::vec &z)
 }
 
 /**
- * Return the nth hermite polynomial 
- *@attention can/should only be run after the Poly::calcHermite method (which precalcs all the values)
- *@return vec with size "number of points"
+ * Return the \f$n^{th}\f$ hermite polynomial from cache
+ * @attention can/should only be run after the Poly::calcHermite method (which precalcs all the values)
+ * @return vec with size "number of points"
  */
 arma::vec
 Poly::hermite(int n)
@@ -44,7 +44,7 @@ Poly::hermite(int n)
 }
 
 /**
- * Computes a cube containing all the Laguerre polynomials for n in [0..n] and m in [0..m]
+ * Computes a cube containing all the Laguerre polynomials for \f$n^{th}\f$ in \f$[0, n]\f$ and \f$m\f$ in \f$[0, m]\f$
  * per slice : m and points fixed
  *
  * @param z The vector of points to be evaluated
@@ -52,7 +52,7 @@ Poly::hermite(int n)
  * @param m Max mth Laguerre polynomial 
  */
 void
-Poly::calcLaguerre(int m, int n, arma::vec z)
+Poly::calcLaguerre(int m, int n, const arma::vec& z)
 {
     //gerenating M matrix
     arma::vec reg = arma::regspace(0,m);
@@ -80,9 +80,9 @@ Poly::calcLaguerre(int m, int n, arma::vec z)
 }
 
 /**
- * Return the nth mth laguerre polynomial 
- *@attention can/should only be run after the Poly::calcLaguerre method (which precalcs all the values)
- *@return vec with size "number of points"
+ * Return the nth mth laguerre polynomial from cache
+ * @attention can/should only be run after the Poly::calcLaguerre method (which precalcs all the values)
+ * @return vec with size "number of points"
  */
 
 arma::vec

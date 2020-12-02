@@ -1,13 +1,13 @@
-//
-// Created by Nitorac on 15/11/2020.
-//
+/**
+ *  @file utils.cpp
+ */
 
 #include "../headers/utils.h"
 
 /**
  * Computes a factorial
- *@param n : the nth factorial
- *@returns n!
+ * @param n the nth factorial
+ * @returns n!
  */
 double
 Utils::fact(int n) {
