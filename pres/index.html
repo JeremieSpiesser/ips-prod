@@ -20,16 +20,17 @@
 class: titlepage
 
 .title[
-Projet IPS - Solutions de l'oscillateur harmonique quantique 1D
+Projet IPS - Calcul de la densité nucléaire locale
 ]
 
 .subtitle[
-J. Spiesser, S. Ammy Driss, T. Ranini - ENSIIE - 2020
+J. Spiesser, P. Le françois, T. Ranini - ENSIIE - 2020
 ]
 
 .row[
-`$$\psi_n(z) = \frac{1}{\sqrt{2^n n!}}\left(\frac{m\omega}{\pi\hbar}\right)^{1/4}e^{-\frac{m\omega z^2}{2\hbar}}H_n\left(\sqrt{\frac{m\omega}{\hbar}} . z\right)$$`
+`$$\rho(\mathbf{r}) \equiv \sum_a \sum_b \rho_{ab}\psi_a(\mathbf{r})\psi^*_b(\mathbf{r})$$`
 ]
+
 
 .footnote[
 [:book:](../index.html)
@@ -40,7 +41,7 @@ layout: true
 class: animated fadeIn middle numbers
 
 .footnote[
-Projet IPS - J. Spiesser, D. Ammy Driss, T. Ranini - ENSIIE - 2020 - [:book:](../index.html)
+Projet IPS - J. Spiesser, PM. Le françois, T. Ranini - ENSIIE - 2020 - [:book:](../index.html)
 ]
 
 ---
@@ -49,15 +50,15 @@ class: toc top
 # Table des matières
 
 --
-1. Structure du projet
 
+1. Structure du projet
   1. Arborescence
   2. Choix des classes
 --
 
 2. Chaîne de compilation
   1. Makefile
-  2. Astyle
+  2. Povray
 --
 
 3. Environnement
@@ -67,10 +68,19 @@ class: toc top
   4. Exemple d'utilisation
 
 --
+
+4. Points techniques
+  1. Polynômes de Laguerre
+  2. Calcul de la densité locale
+  3. Export et visualisation 2D
+
+--
+
 5. Résultats
   1. Fonctions $\psi_n(z)$
-  2. Vérification $E_n = n + \frac{1}{2}$
-  3. Vérification de l'ortogonalité des $\psi_n(z)$
+  2. Densité nucléaire locale 2D
+  3. Densité nucléaire locale 3D
+  
 --
 
 6. Conclusion
@@ -85,22 +95,20 @@ root
 * **bin**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• Les binaires générés_
 * **doc**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• La documentation Doxygen_
 * **headers**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• Les en-têtes_
-   * phi.h
-   * phiplotter.h
-   * polgen.h
-   * schrodingerVerificator.h
+   * basis.h
+   * exporter.h
+   * nuclear.h
+   * poly.h
+   * utils.h
 * **obj**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• Les fichiers objets_
 * **pres**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• La présentation_
 * **src**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• Les sources_
-   * main.cpp
-   * phi.cpp
-   * phiplotter.cpp
-   * polgen.cpp
-   * schrodingerVerificator.cpp
 * **tests**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• Les tests_
-   * testPhi.h
-   * testPolgen.h
-   * testSchrodingerVerificator.h
+   * testBasis.h
+   * testPoly.h
+   * testTest.h
+   * testUtils.h
+* **visu**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_• Visualisation 2D_
 ]
 
 ---
@@ -116,81 +124,86 @@ root
 # Chaîne de compilation – Makefile
 
 
-## Makefile
+## Makefile (1/2)
 
 ```Makefile
 CC = g++
-CFLAGS = -g -std=c++11 -Wall -Wextra
+CFLAGS = -g -std=c++11 -Wall -Wextra -O3 -march=native -flto
 LDFLAGS = -larmadillo
+
 TARGET = ./bin/main
+MAIN_CPP = ./src/main.cpp
+OBJS = ./obj/poly.o ./obj/utils.o ./obj/basis.o ./obj/nuclear.o ./obj/exporter.o
+
 TEST_TARGET = ./bin/tests
-OBJS = ./obj/polgen.o ./obj/phi.o ./obj/phiplotter.o ./obj/schrodingerVerificator.o
-TEST = ./tests/testTest.h ./tests/testPolgen.h ./tests/testPhi.h ./tests/testSchrodingerVerificator.h
+TEST_INC = ./tests/testTest.h ./tests/testUtils.h ./tests/testPoly.h ./tests/testBasis.h
+TEST_CXX_CPP = ./tests/tests.cpp
 
-.PHONY: all tests pres
+VISU_POVRAY_SCENE = visu/visu.pov # If the 'visu' folder is changed, pay attention to change the path of files in the visu.pov as well !
+VISU_POVRAY_RENDER = povray.png
 
+ASTYLE_OPTIONS = \
+		 --style=linux -s4 \
+		 --pad-oper --pad-header --pad-comma \
+		 --align-pointer=name --align-reference=name \
+		 --break-one-line-headers \
+		 --remove-braces \
+		 --break-return-type \
+		 --convert-tabs \
+		 --close-templates \
+		 --max-code-length=101 \
+		 --mode=c \
+		 --lineend=linux \
+		 --attach-inlines \
+		 --indent-labels \
+		 --indent-col1-comments \
+		 --indent-preproc-block
+
+
+
+```
+---
+
+# Chaîne de compilation – Makefile
+
+## Makefile (2/2)
+```
+.PHONY: all tests pres clean doc
 all: $(TARGET)
 
 style:
-	./astyle.sh
+	astyle $(ASTYLE_OPTIONS) --recursive 'src/*.cpp'      || exit 1
+	astyle $(ASTYLE_OPTIONS) --recursive 'headers/*.h'    || exit 1
+	astyle $(ASTYLE_OPTIONS) --recursive 'tests/test*.h'  || exit 1
+	exit 0
 
-exec:
-	$(TARGET)
-
-$(TARGET): $(OBJS) ./src/main.cpp
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+$(TARGET): $(OBJS) $(MAIN_CPP)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 ./obj/%.o: ./src/%.cpp ./headers/%.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 tests: $(OBJS)
-	cxxtestgen --error-printer -o ./tests/tests.cpp $(TEST)
-	$(CC) $(CFLAGS) $(LDFLAGS) ./tests/tests.cpp $^ -o $(TEST_TARGET)
-	./bin/tests
+	cxxtestgen --error-printer -o $(TEST_CXX_CPP) $(TEST_INC)
+	$(CC) $(CFLAGS) $(TEST_CXX_CPP) $^ -o $(TEST_TARGET) $(LDFLAGS)
+
+povray:
+	povray -D +A0.0001 -W800 -H600 +P +Q11 $(VISU_POVRAY_SCENE) +o$(VISU_POVRAY_RENDER)
 
 pres:
 	php -S localhost:8000 -t pres/
 
-docs:
+doc:
 	doxygen
 
 clean:
-	rm -f $(OBJS)
 	rm -f $(TARGET)
+	rm -f $(OBJS)
+	rm -f $(TEST_TARGET)
+	rm -f $(TEST_CXX_CPP)
+	find . -name '*.orig' -exec rm {} \;
 ```
----
 
-# Chaîne de compilation – Astyle
-
-
-## Astyle
-
-```Bash
-#!/bin/bash
-
-OPTIONS='
-    --style=linux -s4
-    --pad-oper --pad-header --pad-comma
-    --align-pointer=name --align-reference=name
-    --break-one-line-headers
-    --remove-braces
-    --break-return-type
-    --convert-tabs
-    --close-templates
-    --max-code-length=101
-    --mode=c
-    --lineend=linux
-    --attach-inlines
-    --indent-labels
-    --indent-col1-comments
-    --indent-preproc-block'
-
-astyle $OPTIONS --recursive 'src/*.cpp'  || exit 1
-astyle $OPTIONS --recursive 'headers/*.h'    || exit 1
-astyle $OPTIONS --recursive 'tests/test*.h'    || exit 1
-find . -name '*.orig' -exec rm {} \;
-exit 0
-```
 ---
 # Environnement – Documentation générée
 
@@ -205,12 +218,15 @@ Disponible dans `doc/html` après avoir fait `make docs`
 ## Cible "tests"
 ```Makefile
 tests: $(OBJS)
-	cxxtestgen --error-printer -o ./tests/tests.cpp $(TEST)
-	$(CC) $(CFLAGS) $(LDFLAGS) ./tests/tests.cpp $^ -o ./bin/tests
-	./bin/tests
+	cxxtestgen --error-printer -o $(TEST_CXX_CPP) $(TEST_INC)
+	$(CC) $(CFLAGS) $(TEST_CXX_CPP) $^ -o $(TEST_TARGET) $(LDFLAGS)
+
 ```
+* Un fichier de test par classe.
+* Les tests fournis sont au début de chaque fichier.
 
 ## Exemple de tests unitaire
+
 
 ```C++
   void testCalculateAll(void) {
