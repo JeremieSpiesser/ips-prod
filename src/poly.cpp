@@ -6,50 +6,57 @@
 #include <armadillo>
 
 /**
- * Generates a matrix containing per row the iterations of the Hermite polynomial
+ * Computes a matrix containing per row the iterations of the Hermite polynomial
  * and per column the points to be evaluated for each polynomial.
  *
  * @param z The vector of points to be evaluated
  * @param n The final iteration of the Hermite polynomial requested
- * @return A matrix of size (n, z.n_elem)
  */
 void
 Poly::calcHermite(int n, const arma::vec &z)
 {
-    arma::mat res(n, z.n_elem);
+    arma::mat res(n+1, z.n_elem);
     arma::mat zt = z.t();
 
-    // For each Hn
-    for (int i = 0; i < n; i++) {
-        // Case H0=1 handling
-        if (0 == i) {
-            res.row(i).fill(1);
-            continue;
-        }
-
-        // For each given z
-        if (1 == i)
-            res.row(i) = 2.0 * zt;
-        else
+    if (n >= 0){
+        res.row(0).fill(1);
+    }
+    if (n>=1){
+        res.row(1) = 2.0 * zt;
+    }
+    if (n>=2){
+        for(int i=2 ; i <= n ; i++ ){
             res.row(i) = 2.0 * zt % res.row(i - 1) - 2.0 * (i - 1) * res.row(i - 2);
+        }
     }
     hermiteRes = res;
 }
 
+/**
+ * Return the nth hermite polynomial 
+ *@attention can/should only be run after the Poly::calcHermite method (which precalcs all the values)
+ *@return vec with size "number of points"
+ */
 arma::vec
 Poly::hermite(int n)
 {
     return hermiteRes.row(n).t();
 }
 
+/**
+ * Computes a cube containing all the Laguerre polynomials for n in [0..n] and m in [0..m]
+ * per slice : m and points fixed
+ *
+ * @param z The vector of points to be evaluated
+ * @param n Max nth Laguerre polynomial 
+ * @param m Max mth Laguerre polynomial 
+ */
 void
 Poly::calcLaguerre(int m, int n, arma::vec z)
 {
     //gerenating M matrix
     arma::vec reg = arma::regspace(0,m);
-    //reg.print("Reg : ");
     arma::vec tmp1(z.n_elem,arma::fill::ones);
-    //tmp1.print("TMP1 : ");
     arma::mat M = reg*tmp1.t();
 
     // Generating Z matrice
@@ -71,6 +78,12 @@ Poly::calcLaguerre(int m, int n, arma::vec z)
     }
     laguerreRes = L;
 }
+
+/**
+ * Return the nth mth laguerre polynomial 
+ *@attention can/should only be run after the Poly::calcLaguerre method (which precalcs all the values)
+ *@return vec with size "number of points"
+ */
 
 arma::vec
 Poly::laguerre(int m, int n)

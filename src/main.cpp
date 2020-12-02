@@ -3,16 +3,18 @@
 #include "../headers/poly.h"
 #include "../headers/basis.h"
 #include "../headers/nuclear.h"
+#include "../headers/exporter.h"
 
 int
 main()
 {
     std::cout << "       -=-=[ Testing new class layout ]=-=-" << std::endl;
     Poly pol;
-    arma::vec z({1, 2, 3, 4, 5, 6});
-    arma::vec r({1, 2, 3, 4, 5, 6});
+    arma::vec XorR = arma::linspace(-10, 10, 32);
+    arma::vec Y = arma::linspace(-10, 10, 32);
+    arma::vec Z = arma::linspace(-20, 20, 64);
 
-    Nuclear nuclear(r, z, 1.935801664793151, 2.829683956491218, 14, 1.3);
+    Nuclear nuclear(XorR, Z, 1.935801664793151, 2.829683956491218, 14, 1.3);
 
     std::cout << std::endl << "       -=-=[ Testing basis truncation ]=-=-" << std::endl;
     Basis b(1.935801664793151, 2.829683956491218, 14, 1.3);
@@ -21,7 +23,11 @@ main()
     timer.tic();
     arma::mat res = nuclear.naiveCalc();
     std::cout << timer.toc() << " secondes pour l'algorithme naif" << std::endl;
-    res.print("Res");
-    
+
+
+    Exporter exporter(res, XorR, Y, Z);
+    exporter.toDf3("visu/visu.df3");
+    exporter.toRaw("visu/visu.raw");
+    exporter.toCsv("visu/visu.csv");
     return 0;
 }
