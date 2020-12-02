@@ -45,14 +45,16 @@ function updateDensityPlot(csvData) {
     y: X,
     z: dens,
     type: 'heatmap',
-    colorscale: [ [0.0,'#000000'], [0.1,'#0000FF'], [0.3,'#00FFFF'], [0.5,'#00FF00'], [0.7,'#FFFF00'], [0.9,'#FF0000'], [1.0,'#FFFFFF'] ],
+    // Inferno
+    colorscale: [ [0.0,'#000000'], [0.1,'#160B38'], [0.3,'#6B166E'], [0.5,'#BD3853'], [0.7,'#F3781A'], [0.9,'#F5D949'], [1.0,'#FCFDA4'] ],
     colorbar: {ypad: 0, xpad: 0, thickness: 20, ticks: '', showticklabels: true},
-    zsmooth: 'best'
+    zsmooth: 'none'
   }];
 
   let layout = {
     title: 'Nuclear local density in the (x, z) plane',
-    autosize: true,
+    height: 430,
+    wodth: 1200,
     xaxis: {title: 'Z-axis'},
     yaxis: {title: 'X-axis'},
   };

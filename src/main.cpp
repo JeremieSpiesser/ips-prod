@@ -10,9 +10,9 @@ main()
 {
     std::cout << "       -=-=[ Testing new class layout ]=-=-" << std::endl;
     Poly pol;
-    arma::vec XorR = arma::linspace(-10, 10, 32);
-    arma::vec Y = arma::linspace(-10, 10, 32);
-    arma::vec Z = arma::linspace(-20, 20, 64);
+    arma::vec XorR = arma::linspace(-10, 10, 64);
+    arma::vec Y = arma::linspace(-10, 10, 64);
+    arma::vec Z = arma::linspace(-20, 20, 128);
 
     Nuclear nuclear(XorR, Z, 1.935801664793151, 2.829683956491218, 14, 1.3);
 
