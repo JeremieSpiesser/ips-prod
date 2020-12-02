@@ -17,7 +17,7 @@ public:
     void calcHermite(int, const arma::vec &);
     arma::vec hermite(int);
     // Laguerre related functions
-    void calcLaguerre(int, int, arma::vec);
+    void calcLaguerre(int, int, const arma::vec&);
     arma::vec laguerre(int, int);
 private:
     arma::mat hermiteRes;
