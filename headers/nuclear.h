@@ -13,7 +13,7 @@ class Nuclear
 public:
     Nuclear(arma::vec, arma::vec, double, double, double, double);
     arma::mat naiveCalc();
-    arma::mat opti1Calc();
+    arma::mat optiCalc();
 private:
     arma::vec r;
     arma::vec z;

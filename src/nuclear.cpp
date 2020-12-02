@@ -4,26 +4,41 @@
 // Created by Nitorac on 18/11/2020.
 //
 
+/**
+ * Create a class ready to calculate the nuclear density (which loads the rho.arma matrix)
+ *
+ * @param r The \f$X\f$ vector (which is the same as the \f$R\f$ because \f$\theta = 0\f$)
+ * @param z The \f$Z\f$ vector
+ * @param br \f$r_\perp\f$ Basis deformation
+ * @param bz \f$z\f$ Basis deformation
+ * @param \f$N\f$ Basis truncation param
+ * @param \f$Q\f$ Basis truncation param
+ */
 Nuclear::Nuclear(arma::vec r, arma::vec z, double br, double bz, double N, double Q): r(r), z(z), basis(Basis(br, bz, N, Q)) {
     rhoMat.load("rho.arma", arma::arma_ascii);
 }
 
 /**
- * Returns the $\rho_{ab}$ value using quantum integers instead of a and b
+ * Returns the \f$\rho_{ab}\f$ value using quantum integers instead of a and b
  *
- * @param m first quantum number for a
- * @param n second quantum number for a
- * @param n_z third quantum number for a
+ * @param \f$m\f$ first quantum number for a
+ * @param \f$n\f$ second quantum number for a
+ * @param \f$n_z\f$ third quantum number for a
  *
- * @param mp first quantum number for b
- * @param np second quantum number for b
- * @param n_zp third quantum number for b
+ * @param \f$m_p\f$ first quantum number for b
+ * @param \f$n_p\f$ second quantum number for b
+ * @param \f$n_{z_p}\f$ third quantum number for b
  */
 double
 Nuclear::rho(int m, int n, int n_z, int mp, int np, int n_zp) {
     return rhoMat(basis.rhoIndex(m, n, n_z), basis.rhoIndex(mp, np, n_zp));
 }
 
+/**
+ * Calculates the nuclear density in a naive way and return the result
+ *
+ * @return The matrix with the nuclear density with \f$R\f$ by rows and \f$Z\f$ by columns
+ */
 arma::mat
 Nuclear::naiveCalc(){
     arma::mat result = arma::zeros(r.n_elem, z.n_elem); // number of points on r- and z- axes
@@ -51,8 +66,13 @@ Nuclear::naiveCalc(){
     return result;
 }
 
+/**
+ * Calculates the nuclear density in a optimized way and return the result
+ *
+ * @return The matrix with the nuclear density with \f$R\f$ by rows and \f$Z\f$ by columns
+ */
 arma::mat
-Nuclear::opti1Calc(){
+Nuclear::optiCalc(){
     arma::mat result = arma::zeros(r.n_elem, z.n_elem); // number of points on r- and z- axes
     for (int m = 0; m < basis.mMax; m++)
     {
@@ -63,7 +83,7 @@ Nuclear::opti1Calc(){
             {
                 int rhopart1 = basis.rhoIndex(m,n,n_z);
                 arma::vec zpart1 = basis.zPart(z,n_z);
-                arma::mat funcA = zpart1 * rpart1.t();
+                arma::mat funcA = rpart1 * zpart1.t();
                 for (int np = 0; np < basis.nMax(m); np++)
                 {
                     arma::vec rpart2 = basis.rPart(r,m,np);
@@ -71,7 +91,7 @@ Nuclear::opti1Calc(){
                     {
                         int rhopart2 = basis.rhoIndex(m,np,n_zp);
                         arma::vec zpart2 = basis.zPart(z,n_zp);
-                        arma::mat funcB = zpart2 * rpart2.t();
+                        arma::mat funcB = rpart2 * zpart2.t();
                         result += funcA % funcB * rhoMat(rhopart1,rhopart2); // mat += mat % mat * double
                     }
                 }

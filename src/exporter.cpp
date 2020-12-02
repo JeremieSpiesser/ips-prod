@@ -1,15 +1,18 @@
-//
-// Created by Nitorac on 25/11/2020.
-//
+/**
+ * @file exporter.cpp
+ */
 
 #include "../headers/exporter.h"
 
 /**
+ * Construct the Exporter with a calculated nuclear density and 3 vectors \f$X, Y, Z\f$
+ * corresponding to the linspace
+ * @attention It requires the nuclear density to have been calculated with the same \f$X\f$ and \f$Z\f$ vector
  *
- * @param nuclearDensity
- * @param XequalR
- * @param Y
- * @param Z
+ * @param nuclearDensity The calculated nuclear density calculated with the Basis class
+ * @param XorR The \f$X\f$ vector (which is the same as the \f$R\f$ because \f$\theta = 0\f$)
+ * @param Y The \f$Y\f$ vector
+ * @param Z The \f$Z\f$ vector
  */
 Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const arma::vec& Y, const arma::vec& Z): XorR(XorR), Y(Y), Z(Z), nuclearDensity(nuclearDensity), euclidianDensity(arma::cube(XorR.size(), Y.size(), Z.size())){
     //On fait la révolution du plan (R=X,Z) nuclearDensity autour de l'axe Z dans le cube euclidianDensity
@@ -29,6 +32,12 @@ Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const
     }
 }
 
+/**
+ * Translates a cube in a df3 string readable by POV-Ray
+ *
+ * @param m The cube to translate
+ * @return A string with contains the data to be written in a file
+ */
 std::string Exporter::cubeToDf3(const arma::cube &m)
 {
     std::stringstream ss(std::stringstream::out | std::stringstream::binary);
@@ -57,6 +66,12 @@ std::string Exporter::cubeToDf3(const arma::cube &m)
     return ss.str();
 }
 
+/**
+ * Translates a cube in a raw string readable by Blender
+ *
+ * @param m The cube to translate
+ * @return A string with contains the data to be written in a file
+ */
 std::string Exporter::cubeToRaw(const arma::cube &m)
 {
     std::stringstream ss(std::stringstream::out | std::stringstream::binary);
@@ -76,6 +91,11 @@ std::string Exporter::cubeToRaw(const arma::cube &m)
     return ss.str();
 }
 
+/**
+ * Exports the 3D nuclear density into a .df3 file
+ *
+ * @param path The file path to be written
+ */
 void Exporter::toDf3(const std::string& path){
     std::ofstream file;
     file.open(path);
@@ -83,6 +103,11 @@ void Exporter::toDf3(const std::string& path){
     file.close();
 }
 
+/**
+ * Exports the 3D nuclear density into a .raw file
+ *
+ * @param path The file path to be written
+ */
 void Exporter::toRaw(const std::string& path){
     std::ofstream file;
     file.open(path);
@@ -90,6 +115,14 @@ void Exporter::toRaw(const std::string& path){
     file.close();
 }
 
+/**
+ * Exports the 2D nuclear density into a .csv file which is the concatenation of 3 csv separated with ';' on empty lines :
+ *   - X vector
+ *   - Z vector
+ *   - Nuclear density matrix
+ *
+ * @param path The file path to be written
+ */
 void Exporter::toCsv(const std::string& path){
     std::ofstream file;
     file.open(path);
