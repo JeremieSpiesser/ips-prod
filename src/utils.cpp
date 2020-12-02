@@ -6,7 +6,7 @@
 
 /**
  * Computes a factorial
- * @param n the nth factorial
+ * @param n The \f$n^{\textrm{th}}\f$ factorial
  * @returns n!
  */
 double

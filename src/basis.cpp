@@ -8,10 +8,10 @@
 /**
  * Constructor with basis deformation and basis truncation
  *
- * @param br r Basis deformation
- * @param bz z Basis deformation
- * @param N Basis truncation param
- * @param Q Basis truncation param
+ * @param br \f$r_\perp\f$ Basis deformation
+ * @param bz \f$z\f$ Basis deformation
+ * @param \f$N\f$ Basis truncation param
+ * @param \f$Q\f$ Basis truncation param
  */
 Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q(Q) {
     // mMax
@@ -32,14 +32,14 @@ Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q
         }
     }
     
-    //Selon les formules, ce sont les maximums
+    //According to the mathematic formulas, it's the maximums
     rhoIndex = arma::cube(mMax, nMax(0), n_zMax(0, 0));
     uint i = 0;
-    for (int m = 0; m < mMax; m++)
-        for (int n = 0; n < nMax(m); n++)
-            for (int n_z = 0; n_z < n_zMax(m, n); n_z++)
+    for (int mi = 0; mi < mMax; mi++)
+        for (int n = 0; n < nMax(mi); n++)
+            for (int n_z = 0; n_z < n_zMax(mi, n); n_z++)
             {
-                rhoIndex(m, n, n_z) = i++;
+                rhoIndex(mi, n, n_z) = i++;
             }
 }
 
@@ -56,11 +56,11 @@ double Basis::calcn_zMax(int i) const {
 /**
  * Return the basis func \f$\psi_{m,n,n_z}(r_\perp, \theta, z) \equiv Z(z, n_z) . R(r_\perp, m, n)\f$
  *
- * @param The m param
- * @param The n param
- * @param The \f$n_z\f$ param
- * @param The \f$z\f$ vector
- * @param The \f$r_\perp\f$ vector
+ * @param m The m param
+ * @param n The n param
+ * @param n_z The \f$n_z\f$ param
+ * @param zVals The \f$z\f$ vector
+ * @param rVals The \f$r_\perp\f$ vector
  * @return The \f$\psi_{m,n,n_z}(r_\perp, \theta, z)\f$
  */
 arma::mat
@@ -71,8 +71,8 @@ Basis::basisFunc(int m, int n, int n_z, arma::vec& zVals, arma::vec& rVals) cons
 /**
  * Calculate the \f$Z(z, n_z)\f$ part of the basis function
  *
- * @param The \f$z\f$ vector
- * @param The \f$n_z\f$ param
+ * @param z The \f$z\f$ vector
+ * @param n_z The \f$n_z\f$ param
  * @return \f$Z(z, n_z)\f$
  */
 arma::vec
@@ -90,9 +90,9 @@ Basis::zPart(arma::vec& z, int n_z) const {
 /**
  * Calculate the \f$R(r_\perp, m, n)\f$ part of the basis function
  *
- * @param The \f$r_\perp\f$ vector
- * @param The \f$m\f$ param
- * @param The \f$n\f$ param
+ * @param rr The \f$r_\perp\f$ vector
+ * @param m The \f$m\f$ param
+ * @param n The \f$n\f$ param
  * @return \f$Z(z, n_z)\f$
  */
 arma::vec

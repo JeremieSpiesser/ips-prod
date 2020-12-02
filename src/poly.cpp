@@ -9,8 +9,8 @@
  * Computes a matrix containing per row the iterations of the Hermite polynomial
  * and per column the points to be evaluated for each polynomial.
  *
- * @param \f$z\f$ The vector of points to be evaluated
- * @param \f$n\f$ The final iteration of the Hermite polynomial requested
+ * @param n \f$z\f$ The vector of points to be evaluated
+ * @param z \f$n\f$ The final iteration of the Hermite polynomial requested
  */
 void
 Poly::calcHermite(int n, const arma::vec &z)
@@ -47,9 +47,9 @@ Poly::hermite(int n)
  * Computes a cube containing all the Laguerre polynomials for \f$n^{th}\f$ in \f$[0, n]\f$ and \f$m\f$ in \f$[0, m]\f$
  * per slice : m and points fixed
  *
+ * @param m Max mth Laguerre polynomial
+ * @param n Max nth Laguerre polynomial
  * @param z The vector of points to be evaluated
- * @param n Max nth Laguerre polynomial 
- * @param m Max mth Laguerre polynomial 
  */
 void
 Poly::calcLaguerre(int m, int n, const arma::vec& z)
@@ -82,6 +82,8 @@ Poly::calcLaguerre(int m, int n, const arma::vec& z)
 /**
  * Return the nth mth laguerre polynomial from cache
  * @attention can/should only be run after the Poly::calcLaguerre method (which precalcs all the values)
+ * @param m The \f$m\f$ param
+ * @param n The \f$n\f$ param
  * @return vec with size "number of points"
  */
 
