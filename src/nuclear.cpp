@@ -1,5 +1,4 @@
 #include "../headers/nuclear.h"
-#include "../headers/basis.h"
 
 //
 // Created by Nitorac on 18/11/2020.
