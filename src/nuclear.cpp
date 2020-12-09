@@ -11,8 +11,8 @@
  * @param z The \f$Z\f$ vector
  * @param br \f$r_\perp\f$ Basis deformation
  * @param bz \f$z\f$ Basis deformation
- * @param \f$N\f$ Basis truncation param
- * @param \f$Q\f$ Basis truncation param
+ * @param N Basis truncation param
+ * @param Q Basis truncation param
  */
 Nuclear::Nuclear(arma::vec r, arma::vec z, double br, double bz, double N, double Q): r(r), z(z), basis(Basis(br, bz, N, Q)) {
     rhoMat.load("rho.arma", arma::arma_ascii);
@@ -21,13 +21,13 @@ Nuclear::Nuclear(arma::vec r, arma::vec z, double br, double bz, double N, doubl
 /**
  * Returns the \f$\rho_{ab}\f$ value using quantum integers instead of a and b
  *
- * @param \f$m\f$ first quantum number for a
- * @param \f$n\f$ second quantum number for a
- * @param \f$n_z\f$ third quantum number for a
+ * @param m first quantum number for a
+ * @param n second quantum number for a
+ * @param n_z third quantum number for a
  *
- * @param \f$m_p\f$ first quantum number for b
- * @param \f$n_p\f$ second quantum number for b
- * @param \f$n_{z_p}\f$ third quantum number for b
+ * @param mp first quantum number for b
+ * @param np second quantum number for b
+ * @param n_zp third quantum number for b
  */
 double
 Nuclear::rho(int m, int n, int n_z, int mp, int np, int n_zp) {

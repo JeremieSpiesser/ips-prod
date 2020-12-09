@@ -10,8 +10,8 @@
  *
  * @param br \f$r_\perp\f$ Basis deformation
  * @param bz \f$z\f$ Basis deformation
- * @param \f$N\f$ Basis truncation param
- * @param \f$Q\f$ Basis truncation param
+ * @param N Basis truncation param
+ * @param Q Basis truncation param
  */
 Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q(Q) {
     // mMax
@@ -46,7 +46,7 @@ Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q
 /**
  * Calculate the \f$n_z^{max}\f$ for a given \f$m + 2n + 1\f$
  *
- * @param Value calculated with \f$m + 2n + 1\f$
+ * @param i Value calculated with \f$m + 2n + 1\f$
  * @return The \f$n_z^{max}\f$
  */
 double Basis::calcn_zMax(int i) const {
