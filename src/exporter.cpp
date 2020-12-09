@@ -90,6 +90,16 @@ std::string Exporter::cubeToRaw(const arma::cube &m)
 }
 
 /**
+ * Getter for the euclidianDensity cube
+ *
+ * @return The euclidianDensity cube
+ */
+arma::cube Exporter::getEuclidianDensity()
+{
+    return euclidianDensity;
+}
+
+/**
  * Exports the 3D nuclear density into a .df3 file
  *
  * @param path The file path to be written

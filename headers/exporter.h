@@ -14,6 +14,7 @@ public:
     void toCsv(const std::string &);
     void toDf3(const std::string &);
     void toRaw(const std::string &);
+    arma::cube getEuclidianDensity();
 
 private:
     const arma::vec &XorR;

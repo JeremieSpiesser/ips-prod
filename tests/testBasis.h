@@ -6,7 +6,6 @@ class TestBasis : public CxxTest::TestSuite
 {
 public:
     void testBasisZPart(void) {
-        //     br = 1.935801664793151, bz = 2.829683956491218, N = 14, Q = 1.3
         Basis basis(1.935801664793151,      2.829683956491218,     14,     1.3);
         arma::vec z = {-10.1, -8.4, -1.0, 0.0, 0.1, 4.3, 9.2, 13.7};
         arma::vec res00 = { 7.64546544834383e-04,
