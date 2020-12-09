@@ -10,8 +10,8 @@ TEST_TARGET = ./bin/tests
 TEST_INC = ./tests/testTest.h ./tests/testUtils.h ./tests/testPoly.h ./tests/testBasis.h
 TEST_CXX_CPP = ./tests/tests.cpp
 
-VISU_POVRAY_SCENE = visu/visu.pov # If the 'visu' folder is changed, pay attention to change the path of files in the visu.pov as well !
-VISU_POVRAY_RENDER = povray.png
+VISU_POVRAY_SCENE = pres/visu/visu.pov # If the 'visu' folder is changed, pay attention to change the path of files in the visu.pov as well !
+VISU_POVRAY_RENDER = pres/visu/povray.png
 
 ASTYLE_OPTIONS = \
 		 --style=linux -s4 \
