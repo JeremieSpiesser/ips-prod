@@ -112,7 +112,7 @@ root
 
 ## Diagramme UML des classes
 
-![](images/uml_classes.png)
+![](images/classes_ips_prod.png)
 
 ---
 
@@ -224,72 +224,130 @@ tests: $(OBJS)
 
 
 ```C++
-  void testCalculateAll(void) {
-    int min = 10, max = 20, n = 150;
-    Phi p(min, max, n);
-    p.fill_Z();
-    int index = rand() % n + 1;
-    double x = p.getZ()(index);
-    x = std::exp(((-1.0 / 2.0) * std::pow(x, 2)));
-    x = p.firstTerm(index) * x;
-    p.calculateAll();
-    TS_ASSERT( p.getM()(index, index) == x);
-    TS_TRACE("Test calculateAll() accomplished!");
-  }
+    void testBasisZPart(void) {
+        //     br = 1.935801664793151, bz = 2.829683956491218, N = 14, Q = 1.3
+        Basis basis(1.935801664793151,      2.829683956491218,     14,     1.3);
+        arma::vec z = {-10.1, -8.4, -1.0, 0.0, 0.1, 4.3, 9.2, 13.7};
+        arma::vec res00 = { 7.64546544834383e-04,
+                            5.44886272162148e-03,
+                            4.19492564268520e-01,
+                            4.46522724110539e-01,
+                            4.46243982300708e-01,
+                            1.40736821086932e-01,
+                            2.26186220733178e-03,
+                            3.62929640195959e-06};
+        TS_ASSERT_DELTA(arma::norm(basis.zPart(z, 0) - res00), 0.0, 1e-15);
+        arma::vec res15 = {-9.48674551049192e-02,
+                           -1.40338701953237e-03,
+                           1.85620628040096e-01,
+                           -0.00000000000000e+00,
+                           -3.93028470685214e-02,
+                           -1.79526868763440e-01,
+                           2.15604096600475e-01,
+                           2.44977220882127e-01};
+        TS_ASSERT_DELTA(arma::norm(basis.zPart(z, 15) - res15), 0.0, 1e-15);
+    }
 ```
 
+---
+# Points techniques - Calcul des polynômes de Laguerre
+
 ```C++
-  arma::vec z = {1., 2., 3., 4.};
-  arma::mat correct = {
-    {1., 1., 1., 1.},
-    {2., 4., 6., 8.},
-    {2., 14., 34., 62.},
-    {-4., 40., 180., 464.},
-  };
-  arma::mat gen = Polgen::getPolFromZVec(z, 4);
-  
-  void testN(void) {
-    TS_TRACE("Vérification terme à terme de la validité du polynome pour n=2 et n=3 ...");
-    TS_ASSERT(arma::norm(gen.row(2) - correct.row(2)) < 0.0000000001);
-    TS_ASSERT(arma::norm(gen.row(3) - correct.row(3)) < 0.0000000001);
-  }
+void
+Poly::calcLaguerre(int m, int n, const arma::vec& z)
+{
+    //gerenating M matrix
+    arma::vec reg = arma::regspace(0,m);
+    arma::vec tmp1(z.n_elem,arma::fill::ones);
+    arma::mat M = reg*tmp1.t();
+
+    // Generating Z matrice
+    arma::vec tmp2(m+1,arma::fill::ones);
+    arma::mat Z = tmp2 * z.t();
+
+    arma::cube L(m+1,z.n_elem,n+1);
+
+    if (n >= 0){
+        L.slice(0) = arma::mat(m+1,z.n_elem,arma::fill::ones);
+    }
+    if (n >=1){
+        L.slice(1) = 1 + M - Z;
+    }
+    if (n >=2){
+        for (int i=2 ; i<=n ; i = i+1){
+            L.slice(i) = (2+(M-1-Z)/i)%L.slice(i-1) - (1+(M-1)/i)%L.slice(i-2);
+        }
+    }
+    laguerreRes = L;
+}
+
+```
+- Calcul vectorisé (profondeur de boucle 1)
+- Pas de tests dans le for
+
+---
+# Points techniques - Calcul de la densité locale
+```C++
+arma::mat
+Nuclear::optiCalc(){
+    arma::mat result = arma::zeros(r.n_elem, z.n_elem); // number of points on r- and z- axes
+    for (int m = 0; m < basis.mMax; m++)
+    {
+        for (int n = 0; n < basis.nMax(m); n++)
+        {
+            arma::vec rpart1 = basis.rPart(r,m,n);
+            for (int n_z = 0; n_z < basis.n_zMax(m, n); n_z++)
+            {
+                int rhopart1 = basis.rhoIndex(m,n,n_z);
+                arma::vec zpart1 = basis.zPart(z,n_z);
+                arma::mat funcA = rpart1 * zpart1.t();
+                for (int np = 0; np < basis.nMax(m); np++)
+                {
+                    arma::vec rpart2 = basis.rPart(r,m,np);
+                    for (int n_zp = 0; n_zp < basis.n_zMax(m, np); n_zp++)
+                    {
+                        int rhopart2 = basis.rhoIndex(m,np,n_zp);
+                        arma::vec zpart2 = basis.zPart(z,n_zp);
+                        arma::mat funcB = rpart2 * zpart2.t();
+                        result += funcA % funcB * rhoMat(rhopart1,rhopart2); // mat += mat % mat * double
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+```
+- 2.32173 seconds pour la version naïve
+- 0.0791918 seconds pour la version optimisée
+
+---
+# Points techniques - Export et visualisation 2D 
+```C++
+Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const arma::vec& Y, const arma::vec& Z): XorR(XorR), Y(Y), Z(Z), nuclearDensity(nuclearDensity), euclidianDensity(arma::cube(XorR.size(), Y.size(), Z.size())){
+    // We rotate the plane (X,Z) around the Z axis, in the nuclearDensity cube 
+    // From X and Y we deduce the corresponding radius
+    for (arma::uword i = 0 ; i < XorR.size() ; i++) {
+        double x = XorR(i);
+        for (arma::uword j = 0; j < Y.size(); j++) {
+            double y = Y[j];
+
+            // conversion in cylindric coordinate instead of cartesian
+            double r = std::sqrt(x * x + y * y);
+
+            // Searching the index of r
+            // We look for the index of the closest radius 
+            euclidianDensity.tube(i, j) = nuclearDensity.row(arma::index_min(arma::abs(XorR - r)));
+        }
+    }
+}
 ```
 
 ---
 # Environnement – Exemple d'utilisation
 
 
-### Calcul et affiche un vecteur du niveau d'énergie de l'itération demandée
-```C++
-int min = -8, max = 8, n_vals = 100000, n_iter = 9;
-Phi p(min, max, n_vals, n_iter);
-p.fill_Z();
-p.setHermite(Polgen::getPolFromZVec(p.getZ(), n_iter));
-p.calculateAll();
 
-int iter = 5;
-SchrodingerVerificator::getEn(p, iter).print("E5");
-```
-
-### Calcul de l'ortogonalité pour l'itération $n$ et affichage en `cout`
-```C++
-int n = 15;
-SchrodingerVerificator::orthogonality(n);
-```
-
-### Calcul et export des $\psi_n(z)$ en CSV
-```C++
-void waveFunctions(std::string phi, std::string z)
-{
-    int min = -8, max = 8, n_vals = 250, n_iter = 10;
-    Phi p(min, max, n_vals, n_iter);
-    p.fill_Z();
-    p.setHermite(Polgen::getPolFromZVec(p.getZ(), n_iter));
-    p.calculateAll();
-    PhiPlotter resultsExport(p);
-    resultsExport.exportResults(std::move(phi), std::move(z));
-}
-```
 
 ---
 # Résultats – Fonctions d'onde $\psi_n(z)$
