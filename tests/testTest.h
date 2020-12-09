@@ -3,8 +3,7 @@
 class TestTest : public CxxTest::TestSuite
 {
 public:
-    void
-    testAddition(void) {
+    void testAddition(void) {
         TS_ASSERT(1 + 1 > 1);
         TS_TRACE("blabla");
         TS_ASSERT_EQUALS(1 + 1, 2);
