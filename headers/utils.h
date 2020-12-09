@@ -8,7 +8,8 @@
 /**
  * Utils class
  */
-class Utils {
+class Utils
+{
 public:
     static double fact(int);
 };

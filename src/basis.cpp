@@ -13,12 +13,12 @@
  * @param N Basis truncation param
  * @param Q Basis truncation param
  */
-Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q(Q) {
+Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q(Q)
+{
     // mMax
     mMax = 0;
-    while (calcn_zMax(mMax + 1) >= 1.0) {
+    while (calcn_zMax(mMax + 1) >= 1.0)
         mMax++;
-    }
 
     // nMax
     arma::vec m = arma::regspace(0, mMax - 1);
@@ -27,20 +27,17 @@ Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q
     // n_zMax
     n_zMax = arma::zeros(mMax, nMax(0));
     for (int i = 0; i < mMax; i++) {
-        for (int j = 0; j < nMax[i]; j++) {
-            n_zMax(i, j) = (int) calcn_zMax(i + 2*j + 1);
-        }
+        for (int j = 0; j < nMax[i]; j++)
+            n_zMax(i, j) = (int) calcn_zMax(i + 2 * j + 1);
     }
-    
+
     //According to the mathematic formulas, it's the maximums
     rhoIndex = arma::cube(mMax, nMax(0), n_zMax(0, 0));
     uint i = 0;
     for (int mi = 0; mi < mMax; mi++)
         for (int n = 0; n < nMax(mi); n++)
             for (int n_z = 0; n_z < n_zMax(mi, n); n_z++)
-            {
                 rhoIndex(mi, n, n_z) = i++;
-            }
 }
 
 /**
@@ -49,8 +46,9 @@ Basis::Basis(double br, double bz, double N, double Q) : br(br), bz(bz), N(N), Q
  * @param i Value calculated with \f$m + 2n + 1\f$
  * @return The \f$n_z^{max}\f$
  */
-double Basis::calcn_zMax(int i) const {
-    return (N + 2) * pow(Q, 2.0/3.0) + 0.5 - (i * Q);
+double Basis::calcn_zMax(int i) const
+{
+    return (N + 2) * pow(Q, 2.0 / 3.0) + 0.5 - (i * Q);
 }
 
 /**
@@ -64,7 +62,8 @@ double Basis::calcn_zMax(int i) const {
  * @return The \f$\psi_{m,n,n_z}(r_\perp, \theta, z)\f$
  */
 arma::mat
-Basis::basisFunc(int m, int n, int n_z, arma::vec& zVals, arma::vec& rVals) const {
+Basis::basisFunc(int m, int n, int n_z, arma::vec &zVals, arma::vec &rVals) const
+{
     return rPart(rVals, m, n) * zPart(zVals, n_z).t();
 }
 
@@ -76,7 +75,8 @@ Basis::basisFunc(int m, int n, int n_z, arma::vec& zVals, arma::vec& rVals) cons
  * @return \f$Z(z, n_z)\f$
  */
 arma::vec
-Basis::zPart(arma::vec& z, int n_z) const {
+Basis::zPart(arma::vec &z, int n_z) const
+{
     Poly poly;
     poly.calcHermite(n_z + 1, z / bz);
 
@@ -96,9 +96,10 @@ Basis::zPart(arma::vec& z, int n_z) const {
  * @return \f$Z(z, n_z)\f$
  */
 arma::vec
-Basis::rPart(arma::vec& rr, int m, int n) const {
+Basis::rPart(arma::vec &rr, int m, int n) const
+{
     Poly poly;
-    poly.calcLaguerre(m+1, n+1, arma::square(rr) / (br * br));
+    poly.calcLaguerre(m + 1, n + 1, arma::square(rr) / (br * br));
 
     // Small hack for 2^(n_z) : 1 << n_z is an offset of n_z bytes long so it's equal to 2^(n_z)
     double factor = std::sqrt(Utils::fact(n)) / (br * std::sqrt(M_PI * Utils::fact(m + n)));

@@ -14,8 +14,11 @@
  * @param Y The \f$Y\f$ vector
  * @param Z The \f$Z\f$ vector
  */
-Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const arma::vec& Y, const arma::vec& Z): XorR(XorR), Y(Y), Z(Z), nuclearDensity(nuclearDensity), euclidianDensity(arma::cube(XorR.size(), Y.size(), Z.size())){
-    // We rotate the plane (X,Z) around the Z axis, in the nuclearDensity cube 
+Exporter::Exporter(const arma::mat &nuclearDensity, const arma::vec &XorR, const arma::vec &Y,
+                   const arma::vec &Z): XorR(XorR), Y(Y), Z(Z), nuclearDensity(nuclearDensity),
+    euclidianDensity(arma::cube(XorR.size(), Y.size(), Z.size()))
+{
+    // We rotate the plane (X,Z) around the Z axis, in the nuclearDensity cube
     // From X and Y we deduce the corresponding radius
     for (arma::uword i = 0 ; i < XorR.size() ; i++) {
         double x = XorR(i);
@@ -26,7 +29,7 @@ Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const
             double r = std::sqrt(x * x + y * y);
 
             // Searching the index of r
-            // We look for the index of the closest radius 
+            // We look for the index of the closest radius
             euclidianDensity.tube(i, j) = nuclearDensity.row(arma::index_min(arma::abs(XorR - r)));
         }
     }
@@ -53,12 +56,9 @@ std::string Exporter::cubeToDf3(const arma::cube &m)
     ss.put(nz & 0xff);
     double theMin = 0.0;
     double theMax = m.max();
-    for (uint k = 0; k < m.n_slices; k++)
-    {
-        for (uint j = 0; j < m.n_cols; j++)
-        {
-            for (uint i = 0; i < m.n_rows; i++)
-            {
+    for (uint k = 0; k < m.n_slices; k++) {
+        for (uint j = 0; j < m.n_cols; j++) {
+            for (uint i = 0; i < m.n_rows; i++) {
                 uint v = 255 * (fabs(m(i, j, k)) - theMin) / (theMax - theMin);
                 ss.put(v);
             }
@@ -78,12 +78,9 @@ std::string Exporter::cubeToRaw(const arma::cube &m)
     std::stringstream ss(std::stringstream::out | std::stringstream::binary);
     double theMin = 0.0;
     double theMax = m.max();
-    for (uint k = 0; k < m.n_slices; k++)
-    {
-        for (uint j = 0; j < m.n_cols; j++)
-        {
-            for (uint i = 0; i < m.n_rows; i++)
-            {
+    for (uint k = 0; k < m.n_slices; k++) {
+        for (uint j = 0; j < m.n_cols; j++) {
+            for (uint i = 0; i < m.n_rows; i++) {
                 uint v = 255 * (fabs(m(i, j, k)) - theMin) / (theMax - theMin);
                 ss.put(v);
             }
@@ -97,7 +94,8 @@ std::string Exporter::cubeToRaw(const arma::cube &m)
  *
  * @param path The file path to be written
  */
-void Exporter::toDf3(const std::string& path){
+void Exporter::toDf3(const std::string &path)
+{
     std::ofstream file;
     file.open(path);
     file << cubeToDf3(euclidianDensity);
@@ -109,7 +107,8 @@ void Exporter::toDf3(const std::string& path){
  *
  * @param path The file path to be written
  */
-void Exporter::toRaw(const std::string& path){
+void Exporter::toRaw(const std::string &path)
+{
     std::ofstream file;
     file.open(path);
     file << cubeToRaw(euclidianDensity);
@@ -124,7 +123,8 @@ void Exporter::toRaw(const std::string& path){
  *
  * @param path The file path to be written
  */
-void Exporter::toCsv(const std::string& path){
+void Exporter::toCsv(const std::string &path)
+{
     std::ofstream file;
     file.open(path);
     XorR.save(file, arma::csv_ascii);

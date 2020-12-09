@@ -24,11 +24,11 @@ public:
 
     arma::vec zPart(arma::vec &, int) const;
     arma::vec rPart(arma::vec &, int, int) const;
-    arma::mat basisFunc(int, int, int, arma::vec&, arma::vec&) const;
+    arma::mat basisFunc(int, int, int, arma::vec &, arma::vec &) const;
 
     /** The matrix \f$\rho_{ab}\f$ */
     arma::cube rhoIndex;
-    
+
 private:
     /** Basis deformation param */
     double br;
