@@ -1,22 +1,23 @@
 # IPS-PROD 
 
-Local density of a nuclear system : calculations and plotting using C++11 and [Armadillo](http://arma.sourceforge.net/)
+Local density of a nuclear system : calculations and plotting using C++11, [Armadillo](http://arma.sourceforge.net/) and PovRay 
 
 
 ## Structure
 ```
 .
-├── astyle.sh
 ├── AUTHORS
 ├── bin
+├── doc
 ├── Doxyfile
 ├── headers
 ├── Makefile
 ├── obj
 ├── pres
+| └── visu
 ├── README.md
+├── rho.arma
 ├── src
-├── visu
 └── tests
 ```
 
@@ -25,7 +26,7 @@ Local density of a nuclear system : calculations and plotting using C++11 and [A
 * headers : headers (.h files)
 * src : source files (.cpp files)
 * obj : obj (.o files)
-* pres : presentation (launch using `firefox pres/index.html`)
+* pres : presentation (launch using `firefox pres/index.html` or `make pres`)
 
 ## Compilation
 
@@ -34,8 +35,11 @@ Local density of a nuclear system : calculations and plotting using C++11 and [A
 Required libs in order to compile the main executable : 
 
 - `armadillo` : Check that you have the Armadillo lib installed with support for g++ and c++11. 
-  
-  
+
+Required libs in order to render the 3D ray tracing model :
+
+- `povray`
+
 Required libs in order to compile the tests : 
 
 - `cxxtests` 
@@ -67,11 +71,23 @@ Compiling the documentation :
 make docs
 ```
 
+Rendering povray :
+
+```Bash
+make povray
+```
+
+## Settings
+
+The `Makefile` first lines are options you can edit to customize your compilation flow
 
 ## Where are the executables, tests and documentation ?
 
+**All executables must be executed from the base project folder**
+(because code is using relative paths)
+
 - To run the main executable, run `./bin/main`
-- To view the results, run `python3 ./visualize.py`
+- To view the results, run `make povray`
 - To run the tests, run `./bin/tests`
 - To view the documentation, look at `./doc/html/index.html`
 
