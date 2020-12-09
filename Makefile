@@ -7,7 +7,7 @@ MAIN_CPP = ./src/main.cpp
 OBJS = ./obj/poly.o ./obj/utils.o ./obj/basis.o ./obj/nuclear.o ./obj/exporter.o
 
 TEST_TARGET = ./bin/tests
-TEST_INC = ./tests/testTest.h ./tests/testUtils.h ./tests/testPoly.h ./tests/testBasis.h
+TEST_INC = ./tests/testTest.h ./tests/testUtils.h ./tests/testPoly.h ./tests/testBasis.h ./tests/testNuclear.h
 TEST_CXX_CPP = ./tests/tests.cpp
 
 VISU_POVRAY_SCENE = pres/visu/visu.pov # If the 'visu' folder is changed, pay attention to change the path of files in the visu.pov as well !
