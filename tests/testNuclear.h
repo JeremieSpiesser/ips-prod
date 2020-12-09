@@ -2,7 +2,8 @@
 #include <armadillo>
 #include "../headers/nuclear.h"
 
-class TestNuclear : public CxxTest::TestSuite {
+class TestNuclear : public CxxTest::TestSuite
+{
 public:
     void testOptiIsCorrect(void) {
         arma::vec XorR = arma::linspace(-5, 5, 16);

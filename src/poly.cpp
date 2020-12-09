@@ -15,19 +15,16 @@
 void
 Poly::calcHermite(int n, const arma::vec &z)
 {
-    arma::mat res(n+1, z.n_elem);
+    arma::mat res(n + 1, z.n_elem);
     arma::mat zt = z.t();
 
-    if (n >= 0){
+    if (n >= 0)
         res.row(0).fill(1);
-    }
-    if (n>=1){
+    if (n >= 1)
         res.row(1) = 2.0 * zt;
-    }
-    if (n>=2){
-        for(int i=2 ; i <= n ; i++ ){
+    if (n >= 2) {
+        for (int i = 2 ; i <= n ; i++ )
             res.row(i) = 2.0 * zt % res.row(i - 1) - 2.0 * (i - 1) * res.row(i - 2);
-        }
     }
     hermiteRes = res;
 }
@@ -52,29 +49,26 @@ Poly::hermite(int n)
  * @param z The vector of points to be evaluated
  */
 void
-Poly::calcLaguerre(int m, int n, const arma::vec& z)
+Poly::calcLaguerre(int m, int n, const arma::vec &z)
 {
     //gerenating M matrix
-    arma::vec reg = arma::regspace(0,m);
-    arma::vec tmp1(z.n_elem,arma::fill::ones);
-    arma::mat M = reg*tmp1.t();
+    arma::vec reg = arma::regspace(0, m);
+    arma::vec tmp1(z.n_elem, arma::fill::ones);
+    arma::mat M = reg * tmp1.t();
 
     // Generating Z matrice
-    arma::vec tmp2(m+1,arma::fill::ones);
+    arma::vec tmp2(m + 1, arma::fill::ones);
     arma::mat Z = tmp2 * z.t();
 
-    arma::cube L(m+1,z.n_elem,n+1);
+    arma::cube L(m + 1, z.n_elem, n + 1);
 
-    if (n >= 0){
-        L.slice(0) = arma::mat(m+1,z.n_elem,arma::fill::ones);
-    }
-    if (n >=1){
+    if (n >= 0)
+        L.slice(0) = arma::mat(m + 1, z.n_elem, arma::fill::ones);
+    if (n >= 1)
         L.slice(1) = 1 + M - Z;
-    }
-    if (n >=2){
-        for (int i=2 ; i<=n ; i = i+1){
-            L.slice(i) = (2+(M-1-Z)/i)%L.slice(i-1) - (1+(M-1)/i)%L.slice(i-2);
-        }
+    if (n >= 2) {
+        for (int i = 2 ; i <= n ; i = i + 1)
+            L.slice(i) = (2 + (M - 1 - Z) / i) % L.slice(i - 1) - (1 + (M - 1) / i) % L.slice(i - 2);
     }
     laguerreRes = L;
 }

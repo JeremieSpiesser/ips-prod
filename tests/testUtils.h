@@ -2,7 +2,8 @@
 #include <armadillo>
 #include "../headers/utils.h"
 
-class TestUtils : public CxxTest::TestSuite {
+class TestUtils : public CxxTest::TestSuite
+{
 public:
     void testFact(void) {
         TS_ASSERT_EQUALS(Utils::fact(0), 1);
