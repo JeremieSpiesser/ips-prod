@@ -62,10 +62,8 @@ class: toc top
 --
 
 3. Environnement
-  1. Documentation générée
-  2. Tests unitaires
-  3. Historique Git
-  4. Exemple d'utilisation
+  1. Documentation générée, tests unitaires
+  2. Exemple d'utilisation
 
 --
 
@@ -81,9 +79,6 @@ class: toc top
   2. Densité nucléaire locale 2D
   3. Densité nucléaire locale 3D
   
---
-
-6. Conclusion
 ---
 
 # Structure du projet – Arborescence
@@ -261,11 +256,6 @@ tests: $(OBJS)
 ```
 
 ---
-# Environnement – Historique Git
-
-![tig](images/screen_tig.png)
-
----
 # Environnement – Exemple d'utilisation
 
 
@@ -301,34 +291,6 @@ void waveFunctions(std::string phi, std::string z)
 }
 ```
 
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_0.svg)
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_1.svg)
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_2.svg)
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_3.svg)
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_4.svg)
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_5.svg)
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_6.svg)
 ---
 # Résultats – Fonctions d'onde $\psi_n(z)$
 
@@ -379,26 +341,6 @@ On veut en théorie `$\forall (i,j),\int \psi_i \psi_j = \delta_{ij}$`
 results(i, j) = results(i, j) < 1.0e-4 ? 0.0 : results(i, j);
 ```
 
-### Résultats pour $\forall (i,j), \int \psi_i \psi_j$
-||||||||||||||||
-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
-|1.000|0|0|0|0|0|0|0|0|0|0|0|0|0|0|
-|0|1.000|0|0|0|0|0|0|0|0|0|0|0|0|0|
-|0|0|1.000|0|0|0|0|0|0|0|0|0|0|0|0|
-|0|0|0|1.000|0|0|0|0|0|0|0|0|0|0|0|
-|0|0|0|0|1.000|0|0|0|0|0|0|0|0|0|0|
-|0|0|0|0|0|1.000|0|0|0|0|0|0|0|0|0|
-|0|0|0|0|0|0|1.000|0|0|0|0|0|0|0|0|
-|0|0|0|0|0|0|0|1.000|0|0|0|0|0|0|0|
-|0|0|0|0|0|0|0|0|1.000|0|0|0|0|0|0|
-|0|0|0|0|0|0|0|0|0|1.000|0|0|0|0|0|
-|0|0|0|0|0|0|0|0|0|0|1.000|0|0|0|0|
-|0|0|0|0|0|0|0|0|0|0|0|1.000|0|0|0|
-|0|0|0|0|0|0|0|0|0|0|0|0|1.000|0|0|
-|0|0|0|0|0|0|0|0|0|0|0|0|0|1.000|0|
-|0|0|0|0|0|0|0|0|0|0|0|0|0|0|1.000|
-
----
 
 # Conclusion
 
