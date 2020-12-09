@@ -1,4 +1,4 @@
-# Schrodinger-IPS
+# IPS-PROD 
 
 Quantum harmonic oscillator solver using C++11 and [Armadillo](http://arma.sourceforge.net/)
 

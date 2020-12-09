@@ -13,13 +13,14 @@ TEST_CXX_CPP = ./tests/tests.cpp
 VISU_POVRAY_SCENE = pres/visu/visu.pov # If the 'visu' folder is changed, pay attention to change the path of files in the visu.pov as well !
 VISU_POVRAY_RENDER = pres/visu/povray.png
 
+WEBSERVER_ADDRESS = 0.0.0.0:8000
+
 ASTYLE_OPTIONS = \
 		 --style=linux -s4 \
 		 --pad-oper --pad-header --pad-comma \
 		 --align-pointer=name --align-reference=name \
 		 --break-one-line-headers \
 		 --remove-braces \
-		 --break-return-type \
 		 --convert-tabs \
 		 --close-templates \
 		 --max-code-length=101 \
@@ -54,7 +55,7 @@ povray:
 	povray -D +A0.0001 -W800 -H600 +P +Q11 $(VISU_POVRAY_SCENE) +o$(VISU_POVRAY_RENDER)
 
 pres:
-	php -S localhost:8000 -t pres/
+	php -S $(WEBSERVER_ADDRESS) -t pres/
 
 doc:
 	doxygen
