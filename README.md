@@ -1,6 +1,6 @@
 # IPS-PROD 
 
-Quantum harmonic oscillator solver using C++11 and [Armadillo](http://arma.sourceforge.net/)
+Local density of a nuclear system : calculations and plotting using C++11 and [Armadillo](http://arma.sourceforge.net/)
 
 
 ## Structure
@@ -16,8 +16,8 @@ Quantum harmonic oscillator solver using C++11 and [Armadillo](http://arma.sourc
 ├── pres
 ├── README.md
 ├── src
-├── tests
-└── visualize.py
+├── visu
+└── tests
 ```
 
 * doc : documentation (generated using doxygen)
@@ -34,12 +34,6 @@ Quantum harmonic oscillator solver using C++11 and [Armadillo](http://arma.sourc
 Required libs in order to compile the main executable : 
 
 - `armadillo` : Check that you have the Armadillo lib installed with support for g++ and c++11. 
-  
-  
-Required libs in order to view the results (3d graph) : 
-
-- `python3`
-- `matplotlib` (install with `pip3 install matplotlib`)
   
   
 Required libs in order to compile the tests : 
