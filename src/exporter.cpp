@@ -15,22 +15,23 @@
  * @param Z The \f$Z\f$ vector
  */
 Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const arma::vec& Y, const arma::vec& Z): XorR(XorR), Y(Y), Z(Z), nuclearDensity(nuclearDensity), euclidianDensity(arma::cube(XorR.size(), Y.size(), Z.size())){
-    //On fait la révolution du plan (R=X,Z) nuclearDensity autour de l'axe Z dans le cube euclidianDensity
-    //A partir de X et Y, on en déduit le rayon correspondant
+    // We rotate the plane (X,Z) around the Z axis, in the nuclearDensity cube 
+    // From X and Y we deduce the corresponding radius
     for (arma::uword i = 0 ; i < XorR.size() ; i++) {
         double x = XorR(i);
         for (arma::uword j = 0; j < Y.size(); j++) {
             double y = Y[j];
 
-            // Le rayon qui correspond au X, Y
+            // conversion in cylindric coordinate instead of cartesian
             double r = std::sqrt(x * x + y * y);
 
-            // La recherche de l'indice de r
-            // On cherche l'indice du rayon le plus proche des coordonnées X et Y
+            // Searching the index of r
+            // We look for the index of the closest radius 
             euclidianDensity.tube(i, j) = nuclearDensity.row(arma::index_min(arma::abs(XorR - r)));
         }
     }
 }
+
 
 /**
  * Translates a cube in a df3 string readable by POV-Ray
