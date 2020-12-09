@@ -7,11 +7,14 @@ MAIN_CPP = ./src/main.cpp
 OBJS = ./obj/poly.o ./obj/utils.o ./obj/basis.o ./obj/nuclear.o ./obj/exporter.o
 
 TEST_TARGET = ./bin/tests
-TEST_INC = ./tests/testTest.h ./tests/testUtils.h ./tests/testPoly.h ./tests/testBasis.h
+TEST_INC = ./tests/testTest.h ./tests/testUtils.h ./tests/testPoly.h ./tests/testBasis.h ./tests/testNuclear.h
 TEST_CXX_CPP = ./tests/tests.cpp
 
-VISU_POVRAY_SCENE = visu/visu.pov # If the 'visu' folder is changed, pay attention to change the path of files in the visu.pov as well !
-VISU_POVRAY_RENDER = povray.png
+GENERATED_FILES = ./pres/visu/visu.df3 ./pres/visu/visu.raw ./pres/vius/visu.csv
+VISU_POVRAY_SCENE = ./pres/visu/visu.pov # If the 'visu' folder is changed, pay attention to change the path of files in the visu.pov as well !
+VISU_POVRAY_RENDER = ./pres/visu/povray.png
+
+WEBSERVER_ADDRESS = 0.0.0.0:8000
 
 ASTYLE_OPTIONS = \
 		 --style=linux -s4 \
@@ -19,7 +22,6 @@ ASTYLE_OPTIONS = \
 		 --align-pointer=name --align-reference=name \
 		 --break-one-line-headers \
 		 --remove-braces \
-		 --break-return-type \
 		 --convert-tabs \
 		 --close-templates \
 		 --max-code-length=101 \
@@ -54,7 +56,7 @@ povray:
 	povray -D +A0.0001 -W800 -H600 +P +Q11 $(VISU_POVRAY_SCENE) +o$(VISU_POVRAY_RENDER)
 
 pres:
-	php -S localhost:8000 -t pres/
+	php -S $(WEBSERVER_ADDRESS) -t pres/
 
 doc:
 	doxygen
@@ -64,4 +66,5 @@ clean:
 	rm -f $(OBJS)
 	rm -f $(TEST_TARGET)
 	rm -f $(TEST_CXX_CPP)
+	rm -f $(GENERATED_FILES)
 	find . -name '*.orig' -exec rm {} \;
