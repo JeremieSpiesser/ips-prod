@@ -24,7 +24,7 @@ Projet IPS - Calcul de la densité nucléaire locale
 ]
 
 .subtitle[
-J. Spiesser, P. Le françois, T. Ranini - ENSIIE - 2020
+J. Spiesser, P. Lefrançois, T. Ranini - ENSIIE - 2020
 ]
 
 .row[
@@ -41,7 +41,7 @@ layout: true
 class: animated fadeIn middle numbers
 
 .footnote[
-Projet IPS - J. Spiesser, PM. Le françois, T. Ranini - ENSIIE - 2020 - [:book:](../index.html)
+Projet IPS - J. Spiesser, PM. Lefrançois, T. Ranini - ENSIIE - 2020 - [:book:](../index.html)
 ]
 
 ---
@@ -75,7 +75,7 @@ class: toc top
 --
 
 5. Résultats
-  1. Fonctions $\psi_n(z)$
+  1. Fonction de base $\psi_n(z)$
   2. Densité nucléaire locale 2D
   3. Densité nucléaire locale 3D
   
@@ -280,6 +280,50 @@ Poly::calcLaguerre(int m, int n, const arma::vec& z)
 
 ---
 # Points techniques - Calcul de la densité locale
+`$$
+\psi_{m,n,n_z}(r_\perp, \theta, z)
+        \equiv
+    Z(z, n_z)
+    .
+    R(r_\perp, m, n)
+    .
+         e^{im\theta}
+$$`
+```C++
+arma::mat
+Nuclear::naiveCalc()
+{
+    arma::mat result = arma::zeros(r.n_elem, z.n_elem); // number of points on r- and z- axes
+    for (int m = 0; m < basis.mMax; m++) {
+        for (int n = 0; n < basis.nMax(m); n++) {
+            for (int n_z = 0; n_z < basis.n_zMax(m, n); n_z++) {
+                for (int mp = 0; mp < basis.mMax; mp++) {
+                    for (int np = 0; np < basis.nMax(mp); np++) {
+                        for (int n_zp = 0; n_zp < basis.n_zMax(mp, np); n_zp++) {
+                            arma::mat funcA = basis.basisFunc( m,  n,  n_z, z, r);
+                            arma::mat funcB = basis.basisFunc(mp, np, n_zp, z, r);
+                            result += funcA % funcB * rho(m, n, n_z, mp, np, n_zp); // mat += mat % mat * double
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+```
+---
+# Points techniques - Calcul de la densité locale
+`$$
+\psi_{m,n,n_z}(r_\perp, \theta, z)
+        \equiv
+    Z(z, n_z)
+    .
+    R(r_\perp, m, n)
+    .
+         e^{im\theta}
+$$`
+
 ```C++
 arma::mat
 Nuclear::optiCalc(){
@@ -313,6 +357,7 @@ Nuclear::optiCalc(){
 ```
 - 2.32173 seconds pour la version naïve
 - 0.0791918 seconds pour la version optimisée
+- x30
 
 ---
 # Points techniques - Export et visualisation 2D 
@@ -343,56 +388,20 @@ Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const
 
 
 ---
-# Résultats – Fonctions d'onde $\psi_n(z)$
+# Résultats – Fonction de base $\psi_n(z)$
 
-![](images/n_7.svg)
----
-# Résultats – Fonctions d'onde $\psi_n(z)$
-
-![](images/n_8.svg)
----
-# Résultats – Vérification $E_n = n + \frac{1}{2}$
-
-## Condition d'acceptation de la valeur calculée pour une itération $n$
-
-```C++
-double correctEn = n + 0.5;
-arma::vec En = SchrodingerVerificator::getEn(p, n);
-double maxGen = En.max();
-double minGen = En.min();
-double threshold = 0.004;
-
-bool acceptedResult = maxGen < correctEn + threshold && minGen > correctEn - threshold;
-```
-
-## Résultats pour $\forall z_{0,...,100 000} \in [-8, 8], 0 \leqslant n \leqslant 8$
-```txt
-       -=-=[ Checking energy levels ]=-=-
-PASS ! n=0  theoric=0.5  average_calculated=0.499796  min=0.499366  max=0.50001
-PASS ! n=1  theoric=1.5  average_calculated=1.49982  min=1.49939  max=1.50012
-PASS ! n=2  theoric=2.5  average_calculated=2.49984  min=2.49815  max=2.50023
-PASS ! n=3  theoric=3.5  average_calculated=3.49986  min=3.49943  max=3.50165
-PASS ! n=4  theoric=4.5  average_calculated=4.49988  min=4.49945  max=4.5018
-PASS ! n=5  theoric=5.5  average_calculated=5.4999  min=5.49947  max=5.50056
-PASS ! n=6  theoric=6.5  average_calculated=6.49992  min=6.49936  max=6.50036
-PASS ! n=7  theoric=7.5  average_calculated=7.49994  min=7.49852  max=7.50304
-PASS ! n=8  theoric=8.5  average_calculated=8.49996  min=8.49794  max=8.50062
-
-```
 
 ---
-# Résultats – Vérification de l'ortogonalité des $\psi_n(z)$
-
-On veut en théorie `$\forall (i,j),\int \psi_i \psi_j = \delta_{ij}$`
-
-### Approximation du calcul avec les itérations $i$ et $j$
-
-```C++
-//Hides values < 0.0001 (near to 0.0)
-results(i, j) = results(i, j) < 1.0e-4 ? 0.0 : results(i, j);
-```
+# Résultats - Densité nucléaire locale 2D
 
 
+
+---
+# Résultats - Densité nucléaire locale 3D
+
+.hcenter.shadow.w80[![](images/povray.png)]
+
+---
 # Conclusion
 
 
