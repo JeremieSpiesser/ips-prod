@@ -68,7 +68,7 @@ function updateDensityPlot(csvData) {
   let layout = {
     title: 'Nuclear local density in the (x, z) plane',
     height: 430,
-    wodth: 1200,
+    width: 635,
     xaxis: {
       title: 'Z-axis'
     },
