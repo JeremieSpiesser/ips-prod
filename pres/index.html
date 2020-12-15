@@ -165,6 +165,7 @@ ASTYLE_OPTIONS = \
 ## Makefile (2/2)
 ```
 .PHONY: all tests pres clean doc
+
 all: $(TARGET)
 
 style:
@@ -187,7 +188,7 @@ povray:
 	povray -D +A0.0001 -W800 -H600 +P +Q11 $(VISU_POVRAY_SCENE) +o$(VISU_POVRAY_RENDER)
 
 pres:
-	php -S localhost:8000 -t pres/
+	php -S $(WEBSERVER_ADDRESS) -t pres/
 
 doc:
 	doxygen
@@ -197,6 +198,7 @@ clean:
 	rm -f $(OBJS)
 	rm -f $(TEST_TARGET)
 	rm -f $(TEST_CXX_CPP)
+	rm -f $(GENERATED_FILES)
 	find . -name '*.orig' -exec rm {} \;
 ```
 
