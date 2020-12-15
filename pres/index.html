@@ -74,8 +74,9 @@ class: toc top
 --
 
 5. Résultats
-  1. Densité nucléaire locale 2D
-  2. Densité nucléaire locale 3D
+  1. Explications
+  2. Densité nucléaire locale 2D
+  3. Densité nucléaire locale 3D
 ---
 
 # Structure du projet – Arborescence
@@ -458,6 +459,39 @@ Exporter exporter(res, XorR, Y, Z);
 exporter.toDf3(df3Path);
 exporter.toRaw(rawPath);
 ```
+
+---
+class: top
+
+# Résultats - Explications
+
+- Une matrice {$\rho_{ab}$} était donnée : il s'agit d'une matrice de densité.
+- Chaque indice de base (a et b dans ce cas) sont équivalents à des sensembles (m, n et $n_z$), des nombres quantiques.
+
+---
+class: top
+
+# Résultats - Explications
+
+- Une matrice {$\rho_{ab}$} était donnée : il s'agit d'une matrice de densité.
+- Chaque indice de base (a et b dans ce cas) sont équivalents à des sensembles (m, n et $n_z$), des nombres quantiques.
+- Nous avons implémenté les calculs des polynômes d'Hermite et de ceux de Laguerre.
+- Nous avons codé et utilisé des fonctions de base partant d'un troncation de la base pour calculer $\rho(r)$ la densité en chaque point.
+- Pour cela, nous avons implémenté un algorithme naïf et un algorithme optimisé.
+
+---
+class: top
+
+# Résultats - Explications
+
+- Une matrice {$\rho_{ab}$} était donnée : il s'agit d'une matrice de densité.
+- Chaque indice de base (a et b dans ce cas) sont équivalents à des sensembles (m, n et $n_z$), des nombres quantiques.
+- Nous avons implémenté les calculs des polynômes d'Hermite et de ceux de Laguerre.
+- Nous avons codé et utilisé des fonctions de base partant d'un troncation de la base pour calculer $\rho(r)$ la densité en chaque point.
+- Pour cela, nous avons implémenté un algorithme naïf et un algorithme optimisé.
+- Nous avons ensuite représenté les résultats en 2D selon l'axe (x, z) et en 3D dans l'espace (x, y, z).
+- En observant l'image et le graphe obtenus, nous pouvons observer la probabilité de présence de matière autour du centre du noyau qui semble être celui d'un atome d'hydrogène (un unique nucléon à priori).
+
 ---
 
 # Résultats - Densité nucléaire locale 2D
