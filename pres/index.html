@@ -317,6 +317,8 @@ Nuclear::naiveCalc()
     return result;
 }
 ```
+
+
 ---
 # Points techniques - Calcul de la densité locale
 `$$
@@ -363,6 +365,48 @@ Nuclear::optiCalc(){
 - 2.32173 seconds pour la version naïve
 - 0.0791918 seconds pour la version optimisée
 - x30
+
+
+
+---
+# Points techniques - Calcul de la densité locale
+
+```C++
+arma::mat Zparts(basis.n_zMax(0, 0), z.n_elem); // Z is maximum at n_zMax(0)
+for (uint n_z = 0; n_z < Zparts.n_rows; n_z++) {
+    Zparts.row(n_z) = basis.zPart(z, n_z).t();
+}
+
+uint i = 0;
+arma::cube basisFuncs(r.n_elem, z.n_elem, basis.mMax * basis.nMax(0) * basis.n_zMax(0, 0) /* Maximum value */);
+for (int m = 0; m < basis.mMax; m++) {
+    for (int n = 0; n < basis.nMax(m); n++) {
+        arma::vec R = basis.rPart(r, m, n);
+        for (uint n_z = 0; n_z < basis.n_zMax(m, n); n_z++) {
+            basisFuncs.slice(i) = R * Zparts.row(n_z);
+            ++i;
+        }
+    }
+}
+
+// We stop using rhoIndex as it force to use multiple loops
+arma::mat result = arma::zeros(r.n_elem, z.n_elem); // number of points on r- and z- axes
+for (int m = 0; m < basis.mMax; m++) {
+    for (int n = 0; n < basis.nMax(m); n++) {
+        for (int n_z = 0; n_z < basis.n_zMax(m, n); n_z++) {
+            // Now, we're using the symetry : rho(a,b) = rho(b,a)
+            int a = basis.rhoIndex(m, n, n_z);
+
+            for (int b = basis.rhoIndex(m, 0, 0); b < a; b++) {
+                result += basisFuncs.slice(a) % basisFuncs.slice(b) * rho(a, b) * 2.0;
+            }
+            result += rho(a, a) * basisFuncs.slice(a) % basisFuncs.slice(a);
+        }
+    }
+}
+return result;
+```
+
 
 ---
 # Points techniques - Export et visualisation 2D 
