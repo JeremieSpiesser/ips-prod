@@ -86,13 +86,13 @@ Nuclear::optiCalc()
 {
     //First, we precalculate the basisFuncs
 
-    arma::mat Zparts(basis.n_zMax(0, 0), z.n_elem); // Z a la taille maximum en n_zMax(0)
+    arma::mat Zparts(basis.n_zMax(0, 0), z.n_elem); // Z is maximum at index n_zMax(0)
     for (uint n_z = 0; n_z < Zparts.n_rows; n_z++) {
         Zparts.row(n_z) = basis.zPart(z, n_z).t();
     }
 
     uint i = 0;
-    arma::cube basisFuncs(r.n_elem, z.n_elem, basis.mMax * basis.nMax(0) * basis.n_zMax(0, 0) /* Valeur maximale */);
+    arma::cube basisFuncs(r.n_elem, z.n_elem, basis.mMax * basis.nMax(0) * basis.n_zMax(0, 0) /* Maximum value */);
     for (int m = 0; m < basis.mMax; m++) {
         for (int n = 0; n < basis.nMax(m); n++) {
             arma::vec R = basis.rPart(r, m, n);
