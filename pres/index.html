@@ -49,6 +49,7 @@ Projet IPS - J. Spiesser, P.-M. Lefrançois, T. Ranini - ENSIIE - 2020 - [:book:
 ---
 
 class: toc top
+
 # Table des matières
 
 --
@@ -56,11 +57,13 @@ class: toc top
 1. Structure du projet
   1. Arborescence
   2. Choix des classes
+
 --
 
 2. Chaîne de compilation
   1. Makefile
   2. Povray
+
 --
 
 3. Environnement
@@ -386,21 +389,61 @@ Exporter::Exporter(const arma::mat& nuclearDensity, const arma::vec& XorR, const
 ---
 # Environnement – Exemple d'utilisation
 
+- Calcul 
+
+```C++
+arma::vec XorR = arma::linspace(-10, 10, 32);
+arma::vec Y = arma::linspace(-10, 10, 32);
+arma::vec Z = arma::linspace(-20, 20, 64);
+Nuclear nuclear(XorR, Z, 1.935801664793151, 2.829683956491218, 14, 1.3);
+//arma::mat res = nuclear.naiveCalc();
+arma::mat res2 = nuclear.optiCalc();
+```
+
+- Export en 2D
+
+```C++
+std::string csvPath = "pres/visu/visu.csv";
+// Exportation pour la visualisation 2d, avec un maillage fin
+arma::vec XorR_plotly = arma::linspace(-10, 10, 64);
+arma::vec Y_plotly = arma::linspace(-10, 10, 64);
+arma::vec Z_plotly = arma::linspace(-20, 20, 128);
+
+
+Nuclear nuclear_plotly(XorR_plotly, Z_plotly, 1.935801664793151, 2.829683956491218, 14, 1.3);
+arma::mat res_plotly = nuclear_plotly.optiCalc();
+std::cout << "Exporting to " << csvPath << std::endl;
+Exporter exporter_plotly(res_plotly, XorR_plotly, Y_plotly, Z_plotly);
+exporter_plotly.toCsv(csvPath);
+```
+
+- Export en 3D
+
+```C++
+arma::vec XorR = arma::linspace(-10, 10, 32);
+arma::mat res = nuclear.naiveCalc();
+arma::vec Y = arma::linspace(-10, 10, 32);
+arma::vec Z = arma::linspace(-20, 20, 64);
+
+//Export
+Exporter exporter(res, XorR, Y, Z);
+exporter.toDf3(df3Path);
+exporter.toRaw(rawPath);
+```
 
 ---
 # Résultats – Fonctions d'onde $\psi_n(z)$
 
 ---
-# Résultats – Densité nucléaire locale 2D
 
-
-
----
 # Résultats - Densité nucléaire locale 2D
 
 <div id='plotly00' class='hcenter shadow'></div>
 
+
 ---
+
+
 # Résultats - Densité nucléaire locale 3D
 
 .hcenter.shadow.w80[![](images/povray.png)]
