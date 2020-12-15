@@ -14,7 +14,9 @@ public:
         arma::mat witness = nuclear.naiveCalc();
         arma::mat opti = nuclear.optiCalc();
 
-        TS_ASSERT_DELTA(arma::norm(opti - witness), 0.0, 1e-15);
+        double res = arma::norm(opti - witness);
+
+        TS_ASSERT_DELTA(res, 0.0, 1e-12);
     }
 
     void testNuclearIsCorrect(void) {

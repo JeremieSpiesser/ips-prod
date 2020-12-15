@@ -20,6 +20,7 @@ private:
     Basis basis;
     arma::mat rhoMat;
     double rho(int, int, int, int, int, int);
+    double rho(int, int);
 };
 
 #endif //IPS_PROD_NUCLEAR_H

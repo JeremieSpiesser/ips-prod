@@ -15,7 +15,7 @@
  * @param Q Basis truncation param
  */
 Nuclear::Nuclear(arma::vec r, arma::vec z, double br, double bz, double N, double Q): r(r), z(z),
-    basis(Basis(br, bz, N, Q))
+                                                                                      basis(Basis(br, bz, N, Q))
 {
     rhoMat.load("rho.arma", arma::arma_ascii);
 }
@@ -35,6 +35,18 @@ double
 Nuclear::rho(int m, int n, int n_z, int mp, int np, int n_zp)
 {
     return rhoMat(basis.rhoIndex(m, n, n_z), basis.rhoIndex(mp, np, n_zp));
+}
+
+/**
+ * Returns the \f$\rho_{ab}\f$ value using raw a and b indexes
+ *
+ * @param a First raw index
+ * @param b Second raw index
+ */
+double
+Nuclear::rho(int a, int b)
+{
+    return rhoMat(a, b);
 }
 
 /**
@@ -72,23 +84,37 @@ Nuclear::naiveCalc()
 arma::mat
 Nuclear::optiCalc()
 {
+    //First, we precalculate the basisFuncs
+
+    arma::mat Zparts(basis.n_zMax(0, 0), z.n_elem); // Z a la taille maximum en n_zMax(0)
+    for (uint n_z = 0; n_z < Zparts.n_rows; n_z++) {
+        Zparts.row(n_z) = basis.zPart(z, n_z).t();
+    }
+
+    uint i = 0;
+    arma::cube basisFuncs(r.n_elem, z.n_elem, basis.mMax * basis.nMax(0) * basis.n_zMax(0, 0) /* Valeur maximale */);
+    for (int m = 0; m < basis.mMax; m++) {
+        for (int n = 0; n < basis.nMax(m); n++) {
+            arma::vec R = basis.rPart(r, m, n);
+            for (uint n_z = 0; n_z < basis.n_zMax(m, n); n_z++) {
+                basisFuncs.slice(i) = R * Zparts.row(n_z);
+                ++i;
+            }
+        }
+    }
+
+    // We stop using rhoIndex as it force to use multiple loops
     arma::mat result = arma::zeros(r.n_elem, z.n_elem); // number of points on r- and z- axes
     for (int m = 0; m < basis.mMax; m++) {
         for (int n = 0; n < basis.nMax(m); n++) {
-            arma::vec rpart1 = basis.rPart(r, m, n);
             for (int n_z = 0; n_z < basis.n_zMax(m, n); n_z++) {
-                int rhopart1 = basis.rhoIndex(m, n, n_z);
-                arma::vec zpart1 = basis.zPart(z, n_z);
-                arma::mat funcA = rpart1 * zpart1.t();
-                for (int np = 0; np < basis.nMax(m); np++) {
-                    arma::vec rpart2 = basis.rPart(r, m, np);
-                    for (int n_zp = 0; n_zp < basis.n_zMax(m, np); n_zp++) {
-                        int rhopart2 = basis.rhoIndex(m, np, n_zp);
-                        arma::vec zpart2 = basis.zPart(z, n_zp);
-                        arma::mat funcB = rpart2 * zpart2.t();
-                        result += funcA % funcB * rhoMat(rhopart1, rhopart2); // mat += mat % mat * double
-                    }
+                // Now, we're using the symetry : rho(a,b) = rho(b,a)
+                int a = basis.rhoIndex(m, n, n_z);
+
+                for (int b = basis.rhoIndex(m, 0, 0); b < a; b++) {
+                    result += basisFuncs.slice(a) % basisFuncs.slice(b) * rho(a, b) * 2.0;
                 }
+                result += rho(a, a) * basisFuncs.slice(a) % basisFuncs.slice(a);
             }
         }
     }

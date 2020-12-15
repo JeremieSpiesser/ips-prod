@@ -23,11 +23,14 @@ int main()
     arma::wall_clock timer;
     timer.tic();
     arma::mat res = nuclear.naiveCalc();
-    std::cout << std::endl << timer.toc() << " seconds for the naive computation" << std::endl;
+    double naiveTime = timer.toc();
+    std::cout << std::endl << naiveTime << " seconds for the naive computation" << std::endl;
 
     timer.tic();
     arma::mat res2 = nuclear.optiCalc();
-    std::cout << timer.toc() << " seconds for the optimized computation" << std::endl << std::endl;
+    double optiTime = timer.toc();
+    std::cout << optiTime << " seconds for the optimized computation" << std::endl;
+    std::cout << "Optimization gain: " << naiveTime/optiTime << std::endl << std::endl;
 
     std::cout << "Exporting to " << df3Path << " and " << rawPath << std::endl;
     Exporter exporter(res, XorR, Y, Z);
