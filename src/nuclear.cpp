@@ -103,7 +103,6 @@ Nuclear::optiCalc()
         }
     }
 
-    // We stop using rhoIndex as it force to use multiple loops
     arma::mat result = arma::zeros(r.n_elem, z.n_elem); // number of points on r- and z- axes
     for (int m = 0; m < basis.mMax; m++) {
         for (int n = 0; n < basis.nMax(m); n++) {
