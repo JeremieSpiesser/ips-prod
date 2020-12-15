@@ -28,8 +28,9 @@ Local density of a nuclear system : calculations and plotting using C++11, [Arma
 * obj : obj (.o files)
 * pres : presentation (launch using `firefox pres/index.html` or `make pres`)
 
->[!Attention]
+>** Attention **
 >The pictures in the presentation are generated when you run the `bin/main` file and run the povray target.
+>If you don't see any pictures in the presentation, run `make && ./bin/main && make povray`
 
 
 
